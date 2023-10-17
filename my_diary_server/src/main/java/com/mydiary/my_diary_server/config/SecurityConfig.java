@@ -37,21 +37,20 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/"
+                                "/**"
                         )
                         .permitAll()
-                )
-                .authorizeHttpRequests(request -> request.anyRequest().authenticated());
+                );
 
         return http.build();
     }
+
+
 }

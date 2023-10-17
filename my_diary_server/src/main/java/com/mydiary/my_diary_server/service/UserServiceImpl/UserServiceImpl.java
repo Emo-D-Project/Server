@@ -78,7 +78,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User joinUser(User user) {
 
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userDAO.insertUser(user);

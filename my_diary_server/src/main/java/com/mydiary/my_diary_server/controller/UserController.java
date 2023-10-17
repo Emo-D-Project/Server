@@ -7,6 +7,7 @@ import com.mydiary.my_diary_server.data.dto.UserResponseDTO;
 import com.mydiary.my_diary_server.data.entity.OAuthType;
 import com.mydiary.my_diary_server.data.entity.User;
 import com.mydiary.my_diary_server.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -18,13 +19,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @RestController
 @RequestMapping("/user")
 
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
     @Value("${kakao.key}")
@@ -38,29 +42,35 @@ public class UserController {
 
 
 
-    // 회원가입
-    @PostMapping ("/register")
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserDTO userDTO){
-        UserResponseDTO userResponseDTO = userService.registerUser(userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
-    }
+//    // 회원가입
+//    @PostMapping ("/register")
+//    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserDTO userDTO){
+//        UserResponseDTO userResponseDTO = userService.registerUser(userDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
+//    }
+//
+//    //로그인
+//    @PostMapping("/login")
+//    public ResponseEntity<UserResponseDTO> loginUser(@RequestBody UserLoginDTO userLoginDTO) {
+//        UserResponseDTO userResponseDTO = userService.loginUser(userLoginDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
+//    }
 
-    //로그인
-    @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> loginUser(@RequestBody UserLoginDTO userLoginDTO) {
-        UserResponseDTO userResponseDTO = userService.loginUser(userLoginDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
-    }
 
+
+    // 카카오 로그인
     @GetMapping("/auth/kakao")
-    public String kakaoLogin(@RequestParam("token") String token) {
+    public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@Parameter(hidden = false) @RequestHeader(required = false) String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+
         // 토큰 처리 로직을 구현
-        return joinKakaoUser(getKakaoUserInfo(token));
+        KakaoUserInfoDto userInfo = joinKakaoUser(getKakaoUserInfo(token));
+        return ResponseEntity.ok(userInfo);
     }
 
 
     // 사용자 가입시켜주기
-    private String joinKakaoUser(KakaoUserInfoDto kakaoUserInfo) {
+    KakaoUserInfoDto joinKakaoUser(KakaoUserInfoDto kakaoUserInfo) {
 
         // 사용자가 이미 가입되어 있는지 확인
         String name = kakaoUserInfo.getProperties().getNickname();
@@ -72,21 +82,27 @@ public class UserController {
 
         if (hasEmail) {
             User originUser = userService.checkUsername(kakaoLoginUser.getUsername());
+            logger.debug("hasEmail == True");
 
             if (originUser == null) {
-                userService.joinUser(kakaoLoginUser);
+                User savedUser = userService.joinUser(kakaoLoginUser);
+                logger.debug("originUser == null / savedUserInfo = " + savedUser.toString());
             }
+            else{
+                logger.debug(("originUser is not null"));
+            }
+
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "redirect:/";
+        return kakaoUserInfo;
     }
 
     // 사용자 정보 받기
-    private KakaoUserInfoDto getKakaoUserInfo(String kakaoToken) {
+    KakaoUserInfoDto getKakaoUserInfo(String kakaoToken) {
 
         HttpHeaders kakaoUserInfoHeader = new HttpHeaders();
         kakaoUserInfoHeader.add("Authorization", "Bearer " + kakaoToken);
@@ -95,7 +111,7 @@ public class UserController {
         HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(kakaoUserInfoHeader);
         RestTemplate kakaoUserInfoRest = new RestTemplate();
         ResponseEntity<KakaoUserInfoDto> kakaoUserInfoResponse = kakaoUserInfoRest.exchange(
-                "https://kapi.kakao.com/v2/user/me", HttpMethod.POST, kakaoUserInfoRequest, KakaoUserInfoDto.class);
+                "https://kapi.kakao.com/v2/user/me", HttpMethod.GET, kakaoUserInfoRequest, KakaoUserInfoDto.class);
         return kakaoUserInfoResponse.getBody();
     }
 

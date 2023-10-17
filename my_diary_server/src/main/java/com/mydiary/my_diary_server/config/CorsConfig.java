@@ -18,7 +18,7 @@ public class CorsConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:8080"); // 허용할 오리진
+        config.addAllowedOrigin("*"); // 허용할 오리진
         config.addAllowedHeader("*"); // 허용할 헤더
         config.addAllowedMethod("*"); // 허용할 메서드
         source.registerCorsConfiguration("/**", config);
@@ -28,7 +28,7 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // 요청을 허용할 엔드포인트 패턴을 지정
+        registry.addMapping("/**") // 요청을 허용할 엔드포인트 패턴을 지정
                 .allowedOrigins("*") // 허용할 원천 도메인을 지정, "*"는 모든 도메인을 허용
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드를 지정
                 .allowedHeaders("*"); // 허용할 HTTP 헤더를 지정
