@@ -1,11 +1,9 @@
 package com.mydiary.my_diary_server.service;
 
-import com.mydiary.my_diary_server.data.entity.User;
+import com.mydiary.my_diary_server.domain.User;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

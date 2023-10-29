@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.config.jwt;
 
-import com.mydiary.my_diary_server.data.entity.User;
+import com.mydiary.my_diary_server.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;

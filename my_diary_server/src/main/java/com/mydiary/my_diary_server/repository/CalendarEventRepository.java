@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.repository;
 
-import com.mydiary.my_diary_server.data.entity.CalendarEvent;
+import com.mydiary.my_diary_server.domain.CalendarEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {

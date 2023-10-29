@@ -1,4 +1,4 @@
-package com.mydiary.my_diary_server.data.dto;
+package com.mydiary.my_diary_server.dto;
 
 import lombok.*;
 

@@ -1,11 +1,10 @@
 package com.mydiary.my_diary_server.service;
 
-import com.mydiary.my_diary_server.data.entity.User;
-import com.mydiary.my_diary_server.data.dto.UserDTO;
-import com.mydiary.my_diary_server.data.dto.UserResponseDTO;
+import com.mydiary.my_diary_server.domain.User;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +21,21 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public Long save(AddUserRequest dto){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+        return userRepository.save(User.builder()
+                .email(dto.getEmail())
+                .password(encoder.encode(dto.getPassword()))
+                .build()).getId();
+    }
 
     public User findById(Long userId){
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
+
+    public User findByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("unexpected user"))''
     }
 
 

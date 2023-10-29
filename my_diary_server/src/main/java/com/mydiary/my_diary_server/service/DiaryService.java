@@ -1,8 +1,8 @@
 package com.mydiary.my_diary_server.service;
 
-import com.mydiary.my_diary_server.data.entity.Diary;
-import com.mydiary.my_diary_server.data.dto.DiaryDTO;
-import com.mydiary.my_diary_server.data.dto.DiaryResponseDTO;
+import com.mydiary.my_diary_server.domain.Diary;
+import com.mydiary.my_diary_server.dto.DiaryDTO;
+import com.mydiary.my_diary_server.dto.DiaryResponseDTO;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;

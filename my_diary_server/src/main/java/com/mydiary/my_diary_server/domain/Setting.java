@@ -1,31 +1,30 @@
-package com.mydiary.my_diary_server.data.entity;
+package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarEvent {
+@Table(name = "user_settings")
+public class Setting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
+    private boolean allowMsg;
 
-    private String eventName;
+    private boolean msgAlarm;
 
-    private Date date;
+    private boolean empAlarm;
 
+    private boolean commAlarm;
+
+    private boolean actAlarm;
 
 
 }
-
