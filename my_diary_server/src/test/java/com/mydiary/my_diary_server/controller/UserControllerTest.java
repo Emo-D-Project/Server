@@ -1,28 +1,16 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.controller.UserController;
-import com.mydiary.my_diary_server.data.dto.UserDTO;
-import com.mydiary.my_diary_server.data.dto.UserLoginDTO;
-import com.mydiary.my_diary_server.data.dto.UserResponseDTO;
-import com.mydiary.my_diary_server.data.entity.OAuthType;
-import com.mydiary.my_diary_server.data.entity.User;
 import com.mydiary.my_diary_server.data.dto.KakaoUserInfoDto;
 import com.mydiary.my_diary_server.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class UserControllerTest {
@@ -36,7 +24,7 @@ public class UserControllerTest {
     @BeforeEach
     public void setUp() {
         // userService와 authenticationManager의 Mock 객체를 주입
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
     }
 

@@ -1,9 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
 import com.mydiary.my_diary_server.data.dto.KakaoUserInfoDto;
-import com.mydiary.my_diary_server.data.dto.UserDTO;
-import com.mydiary.my_diary_server.data.dto.UserLoginDTO;
-import com.mydiary.my_diary_server.data.dto.UserResponseDTO;
 import com.mydiary.my_diary_server.data.entity.OAuthType;
 import com.mydiary.my_diary_server.data.entity.User;
 import com.mydiary.my_diary_server.service.UserService;
@@ -18,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,19 +38,6 @@ public class UserController {
 
 
 
-//    // 회원가입
-//    @PostMapping ("/register")
-//    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserDTO userDTO){
-//        UserResponseDTO userResponseDTO = userService.registerUser(userDTO);
-//        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
-//    }
-//
-//    //로그인
-//    @PostMapping("/login")
-//    public ResponseEntity<UserResponseDTO> loginUser(@RequestBody UserLoginDTO userLoginDTO) {
-//        UserResponseDTO userResponseDTO = userService.loginUser(userLoginDTO);
-//        return ResponseEntity.status(HttpStatus.OK).body(userResponseDTO);
-//    }
 
 
 
@@ -94,9 +77,9 @@ public class UserController {
 
         }
 
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return kakaoUserInfo;
     }
