@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.controller;
-import com.mydiary.my_diary_server.data.dto.DiaryDTO;
-import com.mydiary.my_diary_server.data.dto.DiaryResponseDTO;
+import com.mydiary.my_diary_server.dto.DiaryDTO;
+import com.mydiary.my_diary_server.dto.DiaryResponseDTO;
 import com.mydiary.my_diary_server.service.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -20,7 +20,7 @@ public class DiaryController {
     public DiaryController(DiaryService diaryService){this.diaryService = diaryService;}
 
     @PostMapping
-    public <content> ResponseEntity<DiaryResponseDTO> createDiary(
+    public <content> ResponseEntity<DiaryResponseDTO> addDiary(
             @RequestParam String title,
             @RequestParam String content) {
         DiaryDTO diaryDTO = new DiaryDTO(title, content, LocalDate.now());

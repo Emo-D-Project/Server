@@ -1,9 +1,8 @@
 package com.mydiary.my_diary_server.config.jwt;
 
-import com.mydiary.my_diary_server.data.entity.User;
+import com.mydiary.my_diary_server.domain.User;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import lombok.Getter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

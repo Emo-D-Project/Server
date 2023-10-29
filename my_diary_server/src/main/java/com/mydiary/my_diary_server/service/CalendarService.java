@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.service;
 
-import com.mydiary.my_diary_server.data.entity.Calendar;
+import com.mydiary.my_diary_server.domain.Calendar;
 import com.mydiary.my_diary_server.repository.CalendarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

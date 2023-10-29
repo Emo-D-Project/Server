@@ -1,7 +1,7 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.config.jwt.TokenProvider;
-import com.mydiary.my_diary_server.data.entity.User;
+import com.mydiary.my_diary_server.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

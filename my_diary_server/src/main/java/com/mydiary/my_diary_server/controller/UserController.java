@@ -1,8 +1,8 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.data.dto.KakaoUserInfoDto;
-import com.mydiary.my_diary_server.data.entity.OAuthType;
-import com.mydiary.my_diary_server.data.entity.User;
+import com.mydiary.my_diary_server.dto.KakaoUserInfoDto;
+import com.mydiary.my_diary_server.domain.OAuthType;
+import com.mydiary.my_diary_server.domain.User;
 import com.mydiary.my_diary_server.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;

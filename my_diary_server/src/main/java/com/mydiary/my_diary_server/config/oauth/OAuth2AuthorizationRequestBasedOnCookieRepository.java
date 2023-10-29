@@ -20,7 +20,16 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository implements Author
 
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
+        if (authorizationRequest == null ){
+            removeAuthorizationRequestCookies(request, response);
+            return;
+        }
 
+        CookieUtil.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtil.serialize(authorizationRequest), COOKIE_EXPIRE_SECONDS);
+    }
+
+    public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response){
+        CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
     }
 
     @Override

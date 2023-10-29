@@ -1,4 +1,4 @@
-package com.mydiary.my_diary_server.data.entity;
+package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @AllArgsConstructor

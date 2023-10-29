@@ -1,4 +1,4 @@
-package com.mydiary.my_diary_server.data.entity;
+package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,22 +9,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_settings")
-public class Setting {
-
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean allowMsg;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private boolean msgAlarm;
+    private String favoriteMusic;
+    private String hobby;
 
-    private boolean empAlarm;
-
-    private boolean commAlarm;
-
-    private boolean actAlarm;
-
-
+    private String mbti;
 }
+

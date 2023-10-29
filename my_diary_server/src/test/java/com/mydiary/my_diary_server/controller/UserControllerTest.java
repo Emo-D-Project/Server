@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.data.dto.KakaoUserInfoDto;
+import com.mydiary.my_diary_server.dto.KakaoUserInfoDto;
 import com.mydiary.my_diary_server.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

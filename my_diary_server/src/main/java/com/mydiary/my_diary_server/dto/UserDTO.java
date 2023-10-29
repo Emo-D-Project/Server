@@ -1,12 +1,12 @@
-package com.mydiary.my_diary_server.data.dto;
+package com.mydiary.my_diary_server.dto;
 
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDTO {
+public class UserDTO {
     private String username;
+    private String password;
     private String email;
 }
-

@@ -1,7 +1,7 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.data.dto.CreateAccessTokenRequest;
-import com.mydiary.my_diary_server.data.dto.CreateAccessTokenResponse;
+import com.mydiary.my_diary_server.dto.CreateAccessTokenRequest;
+import com.mydiary.my_diary_server.dto.CreateAccessTokenResponse;
 import com.mydiary.my_diary_server.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

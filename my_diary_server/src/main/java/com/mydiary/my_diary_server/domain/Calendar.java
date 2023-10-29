@@ -1,4 +1,4 @@
-package com.mydiary.my_diary_server.data.entity;
+package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.service;
 
-import com.mydiary.my_diary_server.data.entity.Setting;
+import com.mydiary.my_diary_server.domain.Setting;
 import com.mydiary.my_diary_server.repository.SettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

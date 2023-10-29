@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.data.entity.Profile;
+import com.mydiary.my_diary_server.domain.Profile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

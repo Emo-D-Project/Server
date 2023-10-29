@@ -1,4 +1,4 @@
-package com.mydiary.my_diary_server.data.entity;
+package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,14 +18,25 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String content;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate date;
+
+    @Column(name = "author", nullable = false)
+    private String author;
+
+
+    @Builder
+    public Diary(String author, String title, String content){
+        this.author = author;
+        this.title = title;
+        this.content = content;
+    }
 
 //    @ManyToOne
 //    @JoinColumn(name = "user_id", nullable = false)
