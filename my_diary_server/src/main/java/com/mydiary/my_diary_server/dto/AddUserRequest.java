@@ -3,9 +3,7 @@ package com.mydiary.my_diary_server.dto;
 import lombok.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserLoginDTO {
+public class AddUserRequest {
     private String password;
     private String email;
 }

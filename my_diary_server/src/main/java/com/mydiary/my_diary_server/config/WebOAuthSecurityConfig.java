@@ -28,7 +28,6 @@ public class WebOAuthSecurityConfig {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
 
     @Bean
     public WebSecurityCustomizer configure(){ // 스프링 시큐리티 기능 비활성화
