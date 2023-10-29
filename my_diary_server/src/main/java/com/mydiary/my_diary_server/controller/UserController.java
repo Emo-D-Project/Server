@@ -30,8 +30,8 @@ public class UserController {
     @Value("${kakao.key}")
     private String kakaoKey;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
 
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
@@ -77,9 +77,9 @@ public class UserController {
 
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return kakaoUserInfo;
     }

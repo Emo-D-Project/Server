@@ -1,6 +1,7 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.User;
+import com.mydiary.my_diary_server.dto.AddUserRequest;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class UserService {
     }
 
     public User findByEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("unexpected user"))''
+        return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("unexpected user"));
     }
 
 

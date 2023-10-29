@@ -1,84 +1,62 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Diary;
-import com.mydiary.my_diary_server.dto.DiaryDTO;
-import com.mydiary.my_diary_server.dto.DiaryResponseDTO;
+import com.mydiary.my_diary_server.dto.AddDiaryRequest;
+import com.mydiary.my_diary_server.dto.UpdateDiaryRequest;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.List;
+
+@RequiredArgsConstructor
 @Service
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
 
-    @Autowired
-    public DiaryService(DiaryRepository diaryRepository) {
-        this.diaryRepository = diaryRepository;
+    public Diary save(AddDiaryRequest request, String userName) {
+        return diaryRepository.save(request.toEntity(userName));
     }
 
-    public DiaryResponseDTO getDiary(Long number) {
-        Diary diary = diaryRepository.findById(number).get();
-
-        DiaryResponseDTO diaryResponseDTO = new DiaryResponseDTO();
-        diaryResponseDTO.setId(diary.getId());
-        diaryResponseDTO.setTitle(diary.getTitle());
-        diaryResponseDTO.setContent(diary.getContent());
-        diaryResponseDTO.setDate(diary.getDate());
-
-        return diaryResponseDTO;
+    public List<Diary> findAll() {
+        return diaryRepository.findAll();
     }
 
-    public DiaryResponseDTO saveDiary(DiaryDTO diaryDTO) {
-        Diary diary = new Diary();
-        diary.setTitle(diaryDTO.getTitle());
-        diary.setDate(diaryDTO.getDate());
-        diary.setContent(diaryDTO.getContent());
-        diary.setCreatedAt(LocalDateTime.now());
-        diary.setUpdatedAt(LocalDateTime.now());
-
-        Diary savedDiary = diaryRepository.save(diary);
-
-        DiaryResponseDTO diaryResponseDTO = new DiaryResponseDTO();
-        diaryResponseDTO.setTitle(savedDiary.getTitle());
-        diaryResponseDTO.setContent(savedDiary.getContent());
-        diaryResponseDTO.setId(savedDiary.getId());
-        diaryResponseDTO.setDate(savedDiary.getDate());
-
-        return diaryResponseDTO;
+    public Diary findById(long id) {
+        return diaryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
     }
 
-    public DiaryResponseDTO changeDiary(Long number, DiaryDTO diaryDTO) throws ChangeSetPersister.NotFoundException {
-        Optional<Diary> optionalDiary = diaryRepository.findById(number);
+    public void delete(long id) {
+        Diary article = diaryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        Diary diary;
+        authorizeArticleAuthor(article);
+        diaryRepository.delete(article);
+    }
 
-        if (optionalDiary.isPresent()) {
-            diary = optionalDiary.get();
+    @Transactional
+    public Diary update(long id, UpdateDiaryRequest request) {
+        Diary article = diaryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-            Diary changedDiary = diaryRepository.save(diary);
+        authorizeArticleAuthor(article);
+        article.update(request.getTitle(), request.getContent());
 
-            DiaryResponseDTO diaryResponseDTO = new DiaryResponseDTO();
-            diaryResponseDTO.setId(changedDiary.getId());
-            diaryResponseDTO.setTitle(changedDiary.getTitle());
-            diaryResponseDTO.setContent(changedDiary.getContent());
-            diaryResponseDTO.setDate(changedDiary.getDate());
-            return diaryResponseDTO;
+        return article;
+    }
 
-        } else {
-            throw new ChangeSetPersister.NotFoundException();
+    // 일기를 작성한 유저인지 확인
+    private static void authorizeArticleAuthor(Diary article) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!article.getAuthor().equals(userName)) {
+            throw new IllegalArgumentException("not authorized");
         }
-
-
-
     }
 
-    public void deleteDiary(Long number) throws Exception {
-        diaryRepository.delete(diaryRepository.findById(number).get());
-
-    }
 }
