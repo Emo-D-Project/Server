@@ -23,6 +23,10 @@ public class KakaoUserInfoDto {
 	private Properties properties;
 	@JsonProperty("kakao_account")
 	private KakaoAccount kakaoAccount;
+	@JsonProperty("access_token")
+	private String accessToken;
+	@JsonProperty("refresh_token")
+	private String refreshToken;
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

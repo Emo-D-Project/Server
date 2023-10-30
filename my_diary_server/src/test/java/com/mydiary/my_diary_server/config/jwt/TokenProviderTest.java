@@ -46,6 +46,8 @@ public class TokenProviderTest {
                 .get("id", Long.class);
 
         assertThat(userId).isEqualTo(testUser.getId());
+
+        userRepository.delete(testUser);
     }
 
     // validToken() 검증 테스트

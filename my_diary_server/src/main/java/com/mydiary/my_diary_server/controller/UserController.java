@@ -1,10 +1,15 @@
 package com.mydiary.my_diary_server.controller;
 
+import com.mydiary.my_diary_server.config.jwt.TokenProvider;
+import com.mydiary.my_diary_server.config.oauth.OAuth2SuccessHandler;
+import com.mydiary.my_diary_server.config.oauth.OAuth2UserCustomService;
 import com.mydiary.my_diary_server.dto.KakaoUserInfoDto;
 import com.mydiary.my_diary_server.domain.OAuthType;
 import com.mydiary.my_diary_server.domain.User;
+import com.mydiary.my_diary_server.service.RefreshTokenService;
 import com.mydiary.my_diary_server.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -12,11 +17,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
 
 
 @RestController
@@ -25,26 +34,27 @@ import org.slf4j.LoggerFactory;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     private final UserService userService;
     @Value("${kakao.key}")
     private String kakaoKey;
 
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
+
 
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
 
 
-
-
-
-
     // 카카오 로그인
     @GetMapping("/auth/kakao")
-    public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@Parameter(hidden = false) @RequestHeader(required = false) String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
+    public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@Parameter(hidden = false) @RequestHeader(required = false)  String kakaoAccessToken) {
+        String token = kakaoAccessToken.replace("Bearer ", "");
 
         // 토큰 처리 로직을 구현
         KakaoUserInfoDto userInfo = joinKakaoUser(getKakaoUserInfo(token));
@@ -55,12 +65,15 @@ public class UserController {
     // 사용자 가입시켜주기
     KakaoUserInfoDto joinKakaoUser(KakaoUserInfoDto kakaoUserInfo) {
 
+        String accessToken;
+        String refreshToken;
+
         // 사용자가 이미 가입되어 있는지 확인
         String name = kakaoUserInfo.getProperties().getNickname();
         String email = kakaoUserInfo.getKakaoAccount().getEmail();
         boolean hasEmail = kakaoUserInfo.getKakaoAccount().getHasEmail();
 
-        User kakaoLoginUser = User.builder().username(email + "_" + kakaoUserInfo.getId()).password(kakaoKey)
+        User kakaoLoginUser = User.builder().password(email + "_" + kakaoUserInfo.getId())
                 .email(email).oauth(OAuthType.KAKAO).username(name).build();
 
         if (hasEmail) {
@@ -70,16 +83,19 @@ public class UserController {
             if (originUser == null) {
                 User savedUser = userService.joinUser(kakaoLoginUser);
                 logger.debug("originUser == null / savedUserInfo = " + savedUser.toString());
+                accessToken = tokenProvider.generateToken(savedUser, ACCESS_TOKEN_DURATION);
+                refreshToken = tokenProvider.generateToken(savedUser, REFRESH_TOKEN_DURATION);
+
             }
             else{
                 logger.debug(("originUser is not null"));
+                accessToken = tokenProvider.generateToken(originUser, ACCESS_TOKEN_DURATION);
+                refreshToken = tokenProvider.generateToken(originUser, REFRESH_TOKEN_DURATION);
+
             }
-
+            kakaoUserInfo.setAccessToken(accessToken);
+            kakaoUserInfo.setRefreshToken(refreshToken);
         }
-
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(kakaoLoginUser.getUsername(), kakaoKey));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return kakaoUserInfo;
     }
