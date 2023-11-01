@@ -9,14 +9,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class AddDiaryRequest {
-    private String title;
+    private long user_id;
     private String content;
-
-    public Diary toEntity(String author) {
+    private String emotion;
+    private Boolean is_share;
+    private Boolean is_comm;
+    
+    public Diary toEntity(Diary diary) {
         return Diary.builder()
-                .title(title)
-                .content(content)
-                .author(author)
+                .user_id(diary.getUser_id())
+                .content(diary.getContent())
+                .emotion(diary.getEmotion())
+                .is_share(diary.getIs_share())
+                .is_comm(diary.getIs_comm())
                 .build();
     }
 }

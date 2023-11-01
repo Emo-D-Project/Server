@@ -19,8 +19,10 @@ public class DiaryApiController {
     private final DiaryService diaryService;
 
     @PostMapping("/api/diaries")
-    public ResponseEntity<Diary> addDiary(@RequestBody AddDiaryRequest request, Principal principal) {
-        Diary savedDiary = diaryService.save(request, principal.getName());
+    public ResponseEntity<Diary> addDiary
+    (@RequestBody AddDiaryRequest request) {
+        Diary savedDiary = diaryService.save
+        		(new Diary(request.getUser_id(), request.getEmotion(), request.getContent(), request.getIs_share(), request.getIs_comm()));
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
@@ -36,6 +38,7 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
+    
     @GetMapping("/api/diaries/{id}")
     public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) {
         Diary diary = diaryService.findById(id);
@@ -60,5 +63,6 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(updatedDiary);
     }
-
 }
+
+

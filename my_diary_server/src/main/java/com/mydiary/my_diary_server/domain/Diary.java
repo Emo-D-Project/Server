@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,32 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "diaries")
 public class Diary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = true)
-    private String title;
-
-    @Column(nullable = true)
+       
     private String content;
+    private int empathy;
+    private String emotion;
+    private Boolean is_comm;
+    private Boolean is_share;
+    private long user_id;
 
-    @Column(nullable = true)
-    private LocalDate date;
-
-    @Column(name = "author", nullable = false)
-    private String author;
-
-
-    @Builder
-    public Diary(String author, String title, String content){
-        this.author = author;
-        this.title = title;
-        this.content = content;
-    }
 
     @CreatedDate
     @Column(name = "created_at")
@@ -47,11 +37,23 @@ public class Diary {
     @LastModifiedDate
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
-
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+    
+    @Builder
+    public Diary(long user_id, String emotion, String content, Boolean is_share, Boolean is_comm){
+    	this.user_id = user_id;
+    	this.emotion = emotion;
+    	this.content = content;
+    	this.is_comm = is_share;
+    	this.is_share = is_comm;
     }
 
+    public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {
+        this.emotion = emotion;
+        this.content = content;
+        this.is_share = is_share;
+        this.is_comm = is_comm;
+    }
+
+    
 }
 
