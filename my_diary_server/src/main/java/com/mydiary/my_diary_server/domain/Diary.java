@@ -42,7 +42,7 @@ public class Diary {
 
     @CreatedDate
     @Column(name = "created_at")
-    public LocalDateTime CreatedAt;
+    public LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")

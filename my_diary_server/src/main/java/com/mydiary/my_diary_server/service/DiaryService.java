@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,34 +28,41 @@ public class DiaryService {
         return diaryRepository.findAll();
     }
 
+
+    public List<Diary> findByEmail(String author) {
+        return diaryRepository.findByAuthor(author)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + author));
+
+    }
+
     public Diary findById(long id) {
         return diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
     }
 
     public void delete(long id) {
-        Diary article = diaryRepository.findById(id)
+        Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        authorizeArticleAuthor(article);
-        diaryRepository.delete(article);
+        authorizeDiaryWriter(diary);
+        diaryRepository.delete(diary);
     }
 
     @Transactional
     public Diary update(long id, UpdateDiaryRequest request) {
-        Diary article = diaryRepository.findById(id)
+        Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        authorizeArticleAuthor(article);
-        article.update(request.getTitle(), request.getContent());
+        authorizeDiaryWriter(diary);
+        diary.update(request.getTitle(), request.getContent());
 
-        return article;
+        return diary;
     }
 
     // 일기를 작성한 유저인지 확인
-    private static void authorizeArticleAuthor(Diary article) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!article.getAuthor().equals(userName)) {
+    private static void authorizeDiaryWriter(Diary diary) {
+        String author = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!diary.getAuthor().equals(author)) {
             throw new IllegalArgumentException("not authorized");
         }
     }

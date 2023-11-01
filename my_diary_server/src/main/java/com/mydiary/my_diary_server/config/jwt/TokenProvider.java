@@ -1,11 +1,15 @@
 package com.mydiary.my_diary_server.config.jwt;
 
+import com.mydiary.my_diary_server.controller.UserController;
 import com.mydiary.my_diary_server.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,17 +23,24 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 public class TokenProvider {
+    private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+
+    @Autowired
     private final JwtProperties jwtProperties;
 
     public String generateToken(User user, Duration expriedAt){
         Date now = new Date();
-        return makeToken(new Date(now.getTime() + expriedAt.toMillis()), user);
-
+        String token = makeToken(new Date(now.getTime() + expriedAt.toMillis()), user);
+        return token;
     }
 
     // JWT 토큰 생성 메서드
     private String makeToken(Date expiry, User user){
         Date now = new Date();
+
+        logger.debug("HeaderType: " + Header.TYPE + "HeaderJWTType: " + Header.JWT_TYPE
+        + "jwtpropertiesIssuer: " + jwtProperties.getIssuer() + "issuedat: " + now
+        + "expiration: " + expiry + "userEmail: " + user.getEmail() + "userId: " + user.getId() + "jwtProperties: " + jwtProperties.getSecretKey());
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // 헤더 typ : JWT
@@ -44,13 +55,20 @@ public class TokenProvider {
                 .compact();
 
 
+
+
     }
 
     public boolean validToken(String token){
         try{
+            logger.debug("jwt parser start "
+            + "\n token : " + token);
+
             Jwts.parser()
                     .setSigningKey(jwtProperties.getSecretKey()) // 비밀값으로 복호화
                     .parseClaimsJws(token);
+            logger.debug("jwt parser complete");
+
             return true;
         } catch (Exception e){ // 복호화 과정에서 에러가 나면 유효하지 않은 토큰
             return false;

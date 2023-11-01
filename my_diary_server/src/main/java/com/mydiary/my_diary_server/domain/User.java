@@ -24,18 +24,20 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String username;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
+
+
 
     @Enumerated(value = EnumType.STRING)
     private OAuthType oauth;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        return List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
@@ -59,9 +61,10 @@ public class User implements UserDetails {
     }
 
 
-    public User update(String name) {
-        this.username = name;
+    public User update(String username) {
+        this.username = username;
 
         return this;
     }
+
 }
