@@ -6,11 +6,17 @@ import lombok.*;
 
 @Getter
 public class DiaryResponse {
-    private final String title;
+    private final String emotion;
     private final String content;
-
-    public DiaryResponse(Diary article) {
-        this.title = article.getTitle();
-        this.content = article.getContent();
+    private long user_id;
+    private long id;
+    private int empathy;
+    
+    public DiaryResponse(Diary diary) {
+        this.emotion = diary.getEmotion();
+        this.content = diary.getContent();
+        this.user_id = diary.getUser_id();
+        this.id = diary.getId();
+        this.empathy = diary.getEmpathy();
     }
 }
