@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -33,7 +34,7 @@ public class Message {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_at")
-    private Date sentAt;
+    private LocalDateTime sentAt;
 
 
 }

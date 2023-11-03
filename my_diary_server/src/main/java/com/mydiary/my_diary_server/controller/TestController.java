@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 
 @RestController
 @RequestMapping("/test")
@@ -22,7 +21,7 @@ public class TestController {
     }
 
     @PostMapping("/audioRecognition")
-    public ResponseEntity<String> handleAudioRecognition(@Nullable @RequestBody String audioUrl){
+    public ResponseEntity<String> handleAudioRecognition(@RequestBody String audioUrl){
         return ResponseEntity.status(HttpStatus.OK).body(new SpeechRecongnition().run(audioUrl));
     }
 

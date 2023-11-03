@@ -21,13 +21,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/diaries")
 public class DiaryApiController {
 
     private final DiaryService diaryService;
 
 
     @Operation (summary = "일기 등록")
-    @PostMapping("/api/diaries")
+    @PostMapping("/create")
     public ResponseEntity<Diary> addDiary( @RequestBody AddDiaryRequest request, Principal principal) {
         Diary savedDiary = diaryService.save(request, principal.getName());
 
@@ -36,7 +37,7 @@ public class DiaryApiController {
     }
 
     @Operation (summary = "모든 일기 검색")
-    @GetMapping("/api/diaries")
+    @GetMapping()
     public ResponseEntity<List<DiaryResponse>> findAllDiaries() {
         List<DiaryResponse> diaries = diaryService.findAll()
                 .stream()
@@ -48,7 +49,7 @@ public class DiaryApiController {
     }
 
     @Operation (summary = "나의 모든 일기 검색")
-    @GetMapping("/api/my/diaries/")
+    @GetMapping("/my")
     public ResponseEntity<List<DiaryResponse>> findAllMyDiaries(Principal principal) {
         List<DiaryResponse> diaries = diaryService.findByEmail(principal.getName())
                 .stream()
@@ -60,7 +61,7 @@ public class DiaryApiController {
     }
 
     @Operation (summary = "diaryId 값을 파라미터에 입력하면 해당 일기 검색")
-    @GetMapping("/api/diaries/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) {
         Diary diary = diaryService.findById(id);
 
@@ -68,7 +69,7 @@ public class DiaryApiController {
                 .body(new DiaryResponse(diary));
     }
     @Operation (summary = "diaryId 값을 파라미터에 입력하면 해당 일기 삭제")
-    @DeleteMapping("/api/diaries/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiary(@PathVariable long id) {
         diaryService.delete(id);
 
@@ -77,7 +78,7 @@ public class DiaryApiController {
     }
 
     @Operation (summary = "diaryId 값을 파라미터에 입력하면 해당 일기 업데이트")
-    @PutMapping("/api/diaries/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Diary> updateDiaries(@PathVariable long id,
                                                @RequestBody UpdateDiaryRequest request) {
         Diary updatedDiary = diaryService.update(id, request);
