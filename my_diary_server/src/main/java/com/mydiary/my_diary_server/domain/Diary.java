@@ -23,7 +23,7 @@ public class Diary {
     private Long id;
        
     private String content;
-    private int empathy;
+    private Integer empathy;
     private String emotion;
     private Boolean is_comm;
     private Boolean is_share;

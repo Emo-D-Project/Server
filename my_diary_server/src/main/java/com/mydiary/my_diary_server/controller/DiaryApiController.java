@@ -4,6 +4,8 @@ import com.mydiary.my_diary_server.dto.AddDiaryRequest;
 import com.mydiary.my_diary_server.dto.DiaryResponse;
 import com.mydiary.my_diary_server.dto.UpdateDiaryRequest;
 import com.mydiary.my_diary_server.service.DiaryService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ public class DiaryApiController {
 
     private final DiaryService diaryService;
 
+    
     @PostMapping("/api/diaries")
     public ResponseEntity<Diary> addDiary
     (@RequestBody AddDiaryRequest request) {
