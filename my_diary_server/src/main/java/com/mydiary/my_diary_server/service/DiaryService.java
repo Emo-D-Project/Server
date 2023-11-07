@@ -1,6 +1,7 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Diary;
+import com.mydiary.my_diary_server.domain.Emotion;
 import com.mydiary.my_diary_server.dto.AddDiaryRequest;
 import com.mydiary.my_diary_server.dto.UpdateDiaryRequest;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
@@ -57,6 +58,7 @@ public class DiaryService {
         diary.update(request.getTitle(), request.getContent());
 
         return diary;
+
     }
 
     // 일기를 작성한 유저인지 확인
