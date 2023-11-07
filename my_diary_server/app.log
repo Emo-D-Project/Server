@@ -80,3 +80,11 @@
 2023-11-07T16:59:44.520+09:00 DEBUG 18228 --- [http-nio-8080-exec-5] c.m.m.config.TokenAuthenticationFilter   : token's authorities: [ROLE_USER]
 2023-11-07T17:13:50.253+09:00  WARN 18228 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m29s765ms214µs400ns).
 2023-11-07T18:28:40.685+09:00  WARN 18228 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h9m50s333ms580µs200ns).
+2023-11-07T18:40:34.102+09:00  WARN 18228 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m23s323ms493µs300ns).
+2023-11-07T18:49:36.818+09:00 DEBUG 18228 --- [http-nio-8080-exec-6] c.m.m.config.jwt.TokenProvider           : jwt parser start 
+ token : null
+2023-11-07T18:49:37.437+09:00 DEBUG 18228 --- [http-nio-8080-exec-7] c.m.m.config.jwt.TokenProvider           : jwt parser start 
+ token : null
+2023-11-07T18:49:37.500+09:00 DEBUG 18228 --- [http-nio-8080-exec-8] c.m.m.config.jwt.TokenProvider           : jwt parser start 
+ token : null
+2023-11-07T19:36:26.302+09:00  WARN 18228 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=23m21s648ms165µs400ns).
