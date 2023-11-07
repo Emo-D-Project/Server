@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class CommentResponse {
 	private final String content;
-	private int post_id;
+	private long post_id;
 	private long user_id;
 	
 	public CommentResponse(Comment comment)

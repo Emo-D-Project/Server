@@ -1,6 +1,7 @@
 package com.mydiary.my_diary_server.dto;
 
 import com.mydiary.my_diary_server.domain.Comment;
+import com.mydiary.my_diary_server.domain.Diary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class AddCommentRequest {
 		return Comment.builder()
 				.user_id(comment.getUser_id())
 				.content(comment.getContent())
-				.post_id(comment.getPostId())
+				.postId(comment.getPostId())
 				.build();
 	}
 }
