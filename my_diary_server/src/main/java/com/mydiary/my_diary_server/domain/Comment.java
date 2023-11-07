@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 
 	private String content;
 	
 	@Column(name = "post_id")
-	private int postId;
+	private long postId;
 	
 	private long user_id;
 	

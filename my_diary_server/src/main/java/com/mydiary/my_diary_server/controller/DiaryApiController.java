@@ -16,22 +16,22 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/diaries")
 public class DiaryApiController {
 
     private final DiaryService diaryService;
 
     
-    @PostMapping("/api/diaries")
+    @PostMapping("/create")
     public ResponseEntity<Diary> addDiary
-    (@RequestBody AddDiaryRequest request) {
-        Diary savedDiary = diaryService.save
-        		(new Diary(request.getUser_id(), request.getEmotion(), request.getContent(), request.getIs_share(), request.getIs_comm()));
-
+    (@RequestBody AddDiaryRequest request, Principal principal) {
+    	Diary savedDiary = diaryService.save(request, principal.getName());
+    	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
     }
 
-    @GetMapping("/api/diaries")
+    @GetMapping("/read")
     public ResponseEntity<List<DiaryResponse>> findAlldiaries() {
         List<DiaryResponse> diaries = diaryService.findAll()
                 .stream()
@@ -42,7 +42,7 @@ public class DiaryApiController {
                 .body(diaries);
     }
     
-    @GetMapping("/api/diaries/{id}")
+    @GetMapping("/read/{id}")
     public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) {
         Diary diary = diaryService.findById(id);
 
@@ -50,7 +50,7 @@ public class DiaryApiController {
                 .body(new DiaryResponse(diary));
     }
 
-    @DeleteMapping("/api/diaries/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteDiary(@PathVariable long id) {
         diaryService.delete(id);
 
@@ -58,7 +58,7 @@ public class DiaryApiController {
                 .build();
     }
 
-    @PutMapping("/api/diaries/{id}")
+    @PutMapping("/change/{id}")
     public ResponseEntity<Diary> updateDiaries(@PathVariable long id,
                                                @RequestBody UpdateDiaryRequest request) {
         Diary updatedDiary = diaryService.update(id, request);

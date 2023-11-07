@@ -22,8 +22,8 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
 
-    public Diary save(Diary diary) {
-        return diaryRepository.save(diary);
+    public Diary save(AddDiaryRequest req, String author) {
+        return diaryRepository.save(req.toEntity(author));
     }
 
     public List<Diary> findAll() {
@@ -43,6 +43,7 @@ public class DiaryService {
         Diary article = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
+        authorizeArticleAuthor(article);
       //authorize
         diaryRepository.delete(article);
     }
@@ -53,18 +54,18 @@ public class DiaryService {
         Diary article = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
+        authorizeArticleAuthor(article);
         //authorize
         article.update(request.getEmotion(), request.getContent(), request.getIs_share(), request.getIs_comm());
-
+        
         return article;
     }
 
   
     // 일기를 작성한 유저인지 확인
-    private static void authorizeArticleAuthor(long id, Principal principal) {
-    	UserService serv = new UserService();
-    	if (serv.findById(id).getUsername().equals(principal.getName()) ) {
-            throw new IllegalArgumentException("not authorized");
+    private static void authorizeArticleAuthor(Diary diary) {
+    	String author = SecurityContextHolder.getContext().getAuthentication().getName();
+    	if(!diary.getAuthor().equals(author))
+    		throw new IllegalArgumentException("not authorized");
         }
-    }
-}
+   }

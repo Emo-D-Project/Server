@@ -1,5 +1,7 @@
 package com.mydiary.my_diary_server.dto;
 
+import java.time.LocalDateTime;
+
 import com.mydiary.my_diary_server.domain.Diary;
 
 import lombok.AllArgsConstructor;
@@ -15,12 +17,13 @@ public class UpdateDiaryRequest {
     private Boolean is_share;
     private Boolean is_comm;
     
-    public Diary toEntity(Diary diary) {
+    public Diary toEntity() {
         return Diary.builder()
-                .content(diary.getContent())
-                .emotion(diary.getEmotion())
-                .is_share(diary.getIs_share())
-                .is_comm(diary.getIs_comm())
+                .content(content)
+                .emotion(emotion)
+                .is_share(is_share)
+                .is_comm(is_comm)
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 }

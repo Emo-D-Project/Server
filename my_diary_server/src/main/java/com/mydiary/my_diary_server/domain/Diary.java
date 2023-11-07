@@ -28,8 +28,8 @@ public class Diary {
     private Boolean is_comm;
     private Boolean is_share;
     private long user_id;
-
-
+    private String author;
+    
     @CreatedDate
     @Column(name = "created_at")
     public LocalDateTime CreatedAt;
@@ -39,8 +39,9 @@ public class Diary {
     public LocalDateTime updatedAt;
     
     @Builder
-    public Diary(long user_id, String emotion, String content, Boolean is_share, Boolean is_comm){
+    public Diary(Long user_id, String author, String emotion, String content, Boolean is_share, Boolean is_comm){
     	this.user_id = user_id;
+    	this.author = author;
     	this.emotion = emotion;
     	this.content = content;
     	this.is_comm = is_share;
