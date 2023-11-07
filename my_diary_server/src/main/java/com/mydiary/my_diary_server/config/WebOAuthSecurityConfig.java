@@ -13,6 +13,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,9 +27,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @RequiredArgsConstructor
 @Configuration
 public class WebOAuthSecurityConfig {
-    private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public WebSecurityCustomizer configure() { // 스프링 시큐리티 기능 비활성화
@@ -43,25 +42,20 @@ public class WebOAuthSecurityConfig {
         // 토큰 방식으로 인증을 하기 때문에 폼로그인, 세션비활성화
         http.csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable);
+                        .formLogin(AbstractHttpConfigurer::disable);
 
-        http.sessionManagement(AbstractHttpConfigurer::disable);
+        http.sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // 헤더를 확인할 커스텀 필터 추가
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정. 나머지 API URL은 인증 필요
-        http.authorizeHttpRequests(authorize -> authorize
+        http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/api/token", "/test").permitAll()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/**").hasRole("USER")
         );
 
-
-//
-//
-//        http.logout(logout -> logout
-//                .logoutSuccessUrl("/login"));
 
         // /api로 시작하는 url인 경우 401 상태 코드를 반환하도록 예외 처리
         http.exceptionHandling(exceptionHandling -> exceptionHandling

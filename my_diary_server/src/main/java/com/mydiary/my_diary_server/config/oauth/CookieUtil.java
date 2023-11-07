@@ -3,8 +3,12 @@ package com.mydiary.my_diary_server.config.oauth;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.Nullable;
 import org.springframework.util.SerializationUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Base64;
 
 public class CookieUtil {
@@ -43,9 +47,24 @@ public class CookieUtil {
     // 쿠키를 역직렬화해 객체로 변환
     public static <T> T deserialize(Cookie cookie, Class<T> cls){
         return cls.cast(
-                SerializationUtils.deserialize(
+                deserialize(
                         Base64.getUrlDecoder().decode(cookie.getValue())
                 )
         );
+    }
+
+    public static Object deserialize(@Nullable byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
+            return ois.readObject();
+        }
+        catch (IOException ex) {
+            throw new IllegalArgumentException("Failed to deserialize object", ex);
+        }
+        catch (ClassNotFoundException ex) {
+            throw new IllegalStateException("Failed to deserialize object type", ex);
+        }
     }
 }
