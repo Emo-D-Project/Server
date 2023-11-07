@@ -1,7 +1,6 @@
 package com.mydiary.my_diary_server.dto;
 
 import com.mydiary.my_diary_server.domain.Comment;
-import com.mydiary.my_diary_server.domain.Diary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

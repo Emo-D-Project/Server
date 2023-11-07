@@ -1,25 +1,41 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Message;
+import com.mydiary.my_diary_server.domain.User;
+import com.mydiary.my_diary_server.dto.AddMessageRequest;
+import com.mydiary.my_diary_server.dto.MessageResponse;
 import com.mydiary.my_diary_server.repository.MessageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mydiary.my_diary_server.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MessageService {
 
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    MessageService(MessageRepository messageRepository, UserRepository userRepository){
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
     }
 
+
+
     // 메시지 생성
-    public Message createMessage(Message message) {
-        return messageRepository.save(message);
+    public MessageResponse save(AddMessageRequest request, Long senderId) {
+        Optional<User> sender = userRepository.findById(senderId);
+        Optional<User> receiver = userRepository.findById(request.getReceiverId());
+
+        return new MessageResponse(messageRepository.save(Message.builder()
+                .sender(sender.get())
+                .receiver(receiver.get())
+                .content(request.getContent())
+                .sentAt(request.getSentAt())
+                .build()));
     }
 
     // 메시지 조회 by ID
@@ -46,4 +62,11 @@ public class MessageService {
     public void deleteMessage(Long id) {
         messageRepository.deleteById(id);
     }
+
+    public List<Message> findAllBySenderId(Long id) {
+        return messageRepository.findAllBySenderId(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+    }
+
+
 }
