@@ -16,8 +16,12 @@ import java.util.List;
 @Builder
 @Table(name = "users")
 public class User implements UserDetails {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
