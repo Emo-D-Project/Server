@@ -19,18 +19,18 @@ import lombok.NoArgsConstructor;
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private String content;
 	
 	@Column(name = "post_id")
-	private long postId;
-	
-	private long user_id;
+	private Long postId;
+
+	private Long user_id;
 	
     @Builder
-    public Comment(long user_id, int post_id, String content){
-    	this.user_id = user_id;
+    public Comment(Long post_id, String content, String author){
+    	this.user_id = Long.parseLong(author);
     	this.content = content;
     	this.postId = post_id;
     }

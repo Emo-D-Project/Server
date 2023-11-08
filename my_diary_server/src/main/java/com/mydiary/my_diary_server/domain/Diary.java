@@ -27,7 +27,7 @@ public class Diary {
     private String emotion;
     private Boolean is_comm;
     private Boolean is_share;
-    private long user_id;
+    private Long user_id;
     private String author;
     
     @CreatedDate
@@ -55,7 +55,5 @@ public class Diary {
         this.is_share = is_share;
         this.is_comm = is_comm;
     }
-
-    
 }
 
