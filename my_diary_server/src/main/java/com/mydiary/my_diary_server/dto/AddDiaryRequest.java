@@ -16,13 +16,12 @@ public class AddDiaryRequest {
     private Boolean is_share;
     private Boolean is_comm;
     
-    public Diary toEntity(String author) {
+    public Diary toEntity(Diary diary) {
         return Diary.builder()
-                .content(content)
-                .emotion(emotion)
-                .is_share(is_share)
-                .is_comm(is_comm)
-                .author(author)
+                .content(diary.getContent())
+                .emotion(diary.getEmotion())
+                .is_share(diary.getIs_share())
+                .is_comm(diary.getIs_comm())
                 .CreatedAt(LocalDateTime.now())
                 .build();
     }

@@ -23,7 +23,7 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
 
     public Diary save(AddDiaryRequest req, String author) {
-        return diaryRepository.save(req.toEntity(author));
+        return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
     }
 
     public List<Diary> findAll() {
@@ -65,7 +65,8 @@ public class DiaryService {
     // 일기를 작성한 유저인지 확인
     private static void authorizeArticleAuthor(Diary diary) {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
-    	if(!diary.getAuthor().equals(author))
+    	if(!(diary.getUser_id() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");
+ 
         }
    }

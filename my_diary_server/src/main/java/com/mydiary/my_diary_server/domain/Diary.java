@@ -39,9 +39,10 @@ public class Diary {
     public LocalDateTime updatedAt;
     
     @Builder
-    public Diary(Long user_id, String author, String emotion, String content, Boolean is_share, Boolean is_comm){
+    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
     	this.user_id = user_id;
-    	this.author = author;
+    	this.author = Long.toString(user_id);
+    	this.empathy = 0;
     	this.emotion = emotion;
     	this.content = content;
     	this.is_comm = is_share;
