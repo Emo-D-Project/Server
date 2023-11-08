@@ -22,7 +22,6 @@ public class AddDiaryRequest {
                 .emotion(diary.getEmotion())
                 .is_share(diary.getIs_share())
                 .is_comm(diary.getIs_comm())
-                .CreatedAt(LocalDateTime.now())
                 .build();
     }
 }
