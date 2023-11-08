@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "comment")
@@ -21,6 +20,7 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column
 	private String content;
 	
 	@Column(name = "post_id")

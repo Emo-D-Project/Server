@@ -16,14 +16,14 @@ public class CalendarEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
-
+    @Column
+    private Long calendarId;
+    @Column
     private String eventName;
-
+    @Column
     private Date date;
+    @Column
+    private Emotion emotion;
 
 
 

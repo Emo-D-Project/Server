@@ -9,15 +9,13 @@ import com.mydiary.my_diary_server.domain.UserInfo;
 @AllArgsConstructor
 @Data
 public class SetUserInfoRequest {
-    private String music;
-    private String hobby;
-    private String mbti;
+    private String title;
+    private String content;
 
     public UserInfo toEnity() {
         return UserInfo.builder()
-                .music(music)
-                .hobby(hobby)
-                .mbti(mbti)
+                .title(title)
+                .content(content)
                 .build();
     }
 }

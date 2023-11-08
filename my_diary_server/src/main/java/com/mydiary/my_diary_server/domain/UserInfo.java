@@ -18,17 +18,14 @@ public class UserInfo {
     private User user;
 
     @Column
-    private String music;
+    private String title;
 
     @Column
-    private String hobby;
+    private String content;
 
-    @Column
-    private String mbti;
 
     public void update(UserInfo userInfo) {
-        this.music = userInfo.getMusic();
-        this.hobby = userInfo.getHobby();
-        this.mbti = userInfo.getMbti();
+        this.title = userInfo.getTitle();
+        this.content = userInfo.getContent();
     }
 }
