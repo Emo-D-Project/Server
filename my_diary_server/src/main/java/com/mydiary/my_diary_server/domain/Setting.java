@@ -2,11 +2,13 @@ package com.mydiary.my_diary_server.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_settings")
@@ -16,15 +18,22 @@ public class Setting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean allowMsg;
+    private Long userId;
 
-    private boolean msgAlarm;
+    @Builder.Default
+    private boolean allowMsg = false; // 기본값 설정
 
-    private boolean empAlarm;
+    @Builder.Default
+    private boolean msgAlarm = false;
 
-    private boolean commAlarm;
+    @Builder.Default
+    private boolean empAlarm = false;
 
-    private boolean actAlarm;
+    @Builder.Default
+    private boolean commAlarm = false;
+
+    @Builder.Default
+    private boolean actAlarm = false;
 
 
 }

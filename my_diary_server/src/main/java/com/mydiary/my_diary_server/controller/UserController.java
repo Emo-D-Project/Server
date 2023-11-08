@@ -63,7 +63,7 @@ public class UserController {
 
 
     // 카카오 로그인
-    @Operation (summary = "헤더에 kakaoAccessToken 을 넣어서 보내면 JWT 토큰 발급 ")
+    @Operation (summary = "헤더에 kakaoAccessToken 을 넣어서 보내면 서버의 JWT 토큰 발급 ")
     @GetMapping("/auth/kakao")
     public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@Parameter(hidden = false) @RequestHeader(required = false)  String kakaoAccessToken) {
         String token = kakaoAccessToken.replace("Bearer ", "");
