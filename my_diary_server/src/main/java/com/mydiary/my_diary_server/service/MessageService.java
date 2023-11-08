@@ -31,8 +31,8 @@ public class MessageService {
         Optional<User> receiver = userRepository.findById(request.getReceiverId());
 
         return new MessageResponse(messageRepository.save(Message.builder()
-                .sender(sender.get())
-                .receiver(receiver.get())
+                .senderId(sender.get().getId())
+                .receiverId(receiver.get().getId())
                 .content(request.getContent())
                 .sentAt(request.getSentAt())
                 .build()));

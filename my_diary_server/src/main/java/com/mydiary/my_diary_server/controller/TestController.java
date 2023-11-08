@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.service.SpeechRecongnition;
+import com.mydiary.my_diary_server.service.SpeechRecongnitionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class TestController {
 
     @PostMapping("/audioRecognition")
     public ResponseEntity<String> handleAudioRecognition(@RequestBody String audioUrl){
-        return ResponseEntity.status(HttpStatus.OK).body(new SpeechRecongnition().run(audioUrl));
+        return ResponseEntity.status(HttpStatus.OK).body(new SpeechRecongnitionService().run(audioUrl));
     }
 
 

@@ -20,7 +20,6 @@ public class AddCommentRequest {
 		return Comment.builder()
 				.user_id(comment.getUser_id())
 				.content(comment.getContent())
-				.postId(comment.getPostId())
 				.build();
 	}
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,27 +16,17 @@ import java.util.List;
 @Entity
 
 public class Calendar {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private int year; // 연도 정보
+
+    @Column
+    private int month; // 월 정보
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    private String name;
-
-    private String color;
-
-    private boolean notificationEnabled;
-
-    private String timeZone;
-
-    @OneToMany(mappedBy = "calendar")
-    private List<CalendarEvent> events;
-
-
-
-
 }
