@@ -5,13 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class UserInfoResponse {
-    private String music;
-    private String hobby;
-    private String mbti;
+    private String title;
+    private String content;
 
     public UserInfoResponse(UserInfo userinfo){
-        this.music = userinfo.getMusic();
-        this.hobby = userinfo.getHobby();
-        this.mbti = userinfo.getMbti();
+        this.title = userinfo.getTitle();
+        this.content = userinfo.getContent();
     }
 }

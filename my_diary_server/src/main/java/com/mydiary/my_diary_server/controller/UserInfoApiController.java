@@ -23,7 +23,7 @@ public class UserInfoApiController {
     @Autowired
     public UserInfoApiController(UserInfoService userInfoService){this.userInfoService = userInfoService;}
 
-    @Operation (summary = "유저의 좋아하는 음악, 취미, mbti를 불러오는 기능")
+    @Operation (summary = "마이페이지에 등록한 정보들 불러오는 기능")
     @GetMapping()
     public ResponseEntity<UserInfoResponse> findUserInfo(Principal principal){
         UserInfoResponse userInfoResponse = userInfoService.findById(Long.parseLong(principal.getName()));
@@ -32,7 +32,7 @@ public class UserInfoApiController {
                 .body(userInfoResponse);
     }
 
-    @Operation ( summary = "유저의 좋앙하는 음악, 취미, mbti 설정")
+    @Operation ( summary = "마이페이지에 정보 등록하는 기능")
     @PostMapping()
     public ResponseEntity<UserInfoResponse> setUserInfo(@RequestBody SetUserInfoRequest request, Principal principal){
         UserInfoResponse userInfoResponse = userInfoService.saveOrUpdate(request.toEnity(), Long.parseLong(principal.getName()));

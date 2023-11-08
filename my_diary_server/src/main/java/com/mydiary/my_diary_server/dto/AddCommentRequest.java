@@ -18,7 +18,6 @@ public class AddCommentRequest {
 	{
 		return Comment.builder()
 				.content(comment.getContent())
-				.postId(comment.getPostId())
 				.build();
 	}
 }

@@ -17,8 +17,8 @@ public class MessageResponse {
 
     public MessageResponse(Message message) {
         this.content = message.getContent();
-        this.senderId = message.getSender().getId();
-        this.receiverId = message.getReceiver().getId();
+        this.senderId = message.getSenderId();
+        this.receiverId = message.getReceiverId();
         this.sentAt = message.getSentAt();
     }
 }
