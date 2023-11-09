@@ -15,7 +15,7 @@ public class DiaryResponse {
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
         this.content = diary.getContent();
-        this.user_id = diary.getUser_id();
+        this.user_id = diary.getUserId();
         this.id = diary.getId();
         this.empathy = diary.getEmpathy();
     }

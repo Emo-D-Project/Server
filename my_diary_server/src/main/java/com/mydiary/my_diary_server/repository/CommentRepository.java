@@ -9,5 +9,5 @@ import com.mydiary.my_diary_server.domain.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long>{
-	List<Comment> findByPostId(int post_id);
+	List<Comment> findByPostId(Long post_id);
 }

@@ -27,7 +27,9 @@ public class Diary {
     private String emotion;
     private Boolean is_comm;
     private Boolean is_share;
-    private long user_id;
+    
+    @Column(name = "user_id")
+    private Long userId;
     private String author;
     
     @CreatedDate
@@ -40,13 +42,14 @@ public class Diary {
     
     @Builder
     public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
-    	this.user_id = user_id;
+    	this.userId = user_id;
     	this.author = Long.toString(user_id);
     	this.empathy = 0;
     	this.emotion = emotion;
     	this.content = content;
     	this.is_comm = is_share;
     	this.is_share = is_comm;
+    	this.CreatedAt = LocalDateTime.now();
     }
 
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {
@@ -54,8 +57,7 @@ public class Diary {
         this.content = content;
         this.is_share = is_share;
         this.is_comm = is_comm;
+        this.updatedAt = LocalDateTime.now();
     }
-
-    
 }
 

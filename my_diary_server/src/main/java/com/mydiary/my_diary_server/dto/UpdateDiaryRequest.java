@@ -23,7 +23,6 @@ public class UpdateDiaryRequest {
                 .emotion(emotion)
                 .is_share(is_share)
                 .is_comm(is_comm)
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 }
