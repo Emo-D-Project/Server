@@ -53,6 +53,18 @@ public class DiaryApiController {
                 .body(new DiaryResponse(diary));
     }
 
+    @GetMapping("/mine/{userid}")
+    @Operation(summary="자신의 일기 불러오기")
+    public ResponseEntity<List<DiaryResponse>> findmydiaries(Principal principal)
+    {
+    	List<DiaryResponse> diaries = diaryService.findMine(Long.parseLong(principal.getName()))
+                .stream()
+                .map(DiaryResponse::new)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(diaries);
+    }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary="일기 삭제")
