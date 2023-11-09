@@ -1,6 +1,5 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.service.SpeechRecongnitionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

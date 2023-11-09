@@ -33,7 +33,8 @@ public class WebOAuthSecurityConfig {
     public WebSecurityCustomizer configure() { // 스프링 시큐리티 기능 비활성화
         return (web) -> web.ignoring()
                 .requestMatchers("/img/**", "/css/**", "/js/**","/v3/api-docs/**", 
-                		"/swagger-ui/**", "/user/auth/kakao", "/api/diaries/read/**", "/api/comments/read/**");
+                		"/swagger-ui/**", "/user/auth/kakao", "/api/diaries/read/**", "/api/comments/read/**"
+                		);
     }
 
     @Bean

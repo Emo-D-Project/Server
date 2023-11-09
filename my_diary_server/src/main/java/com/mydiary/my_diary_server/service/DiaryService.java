@@ -30,7 +30,10 @@ public class DiaryService {
         return diaryRepository.findAll();
     }
     
- 
+    public List<Diary> findMine(Long user_id)
+    {
+    	return diaryRepository.findByUserId(user_id);
+    }
 
     public Diary findById(long id) {
         return diaryRepository.findById(id)
@@ -65,7 +68,7 @@ public class DiaryService {
     // 일기를 작성한 유저인지 확인
     private static void authorizeArticleAuthor(Diary diary) {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
-    	if(!(diary.getUser_id() == Long.parseLong(author)))
+    	if(!(diary.getUserId() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");
  
         }
