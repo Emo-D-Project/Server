@@ -33,7 +33,7 @@ public class CalendarEventController {
     @Operation(summary = "캘린더 이벤트 저장하는 기능")
     @PostMapping()
     public ResponseEntity<CalendarEvent> saveOrUpdate(@RequestBody CalendarEvent updatedEvent) {
-        CalendarEvent event = calendarEventService.findCalendarEventByCalendarId(updatedEvent.getCalendarId());
+        CalendarEvent event = calendarEventService.findCalendarEventByCalendarId(updatedEvent.getId());
         if (event != null) {
             CalendarEvent updated = calendarEventService.updateCalendarEvent(updatedEvent);
             return ResponseEntity.ok(updated);

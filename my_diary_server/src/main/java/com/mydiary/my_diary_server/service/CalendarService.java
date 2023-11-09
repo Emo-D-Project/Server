@@ -35,7 +35,8 @@ public class CalendarService {
         Optional<Calendar> calendarOptional = calendarRepository.findByUserId(userId);
         if (calendarOptional.isPresent()) { // 기존 캘린더가 존재할 경우
             Calendar calendar = calendarOptional.get();
-            calendar.setDate(updatedCalendar.getDate());
+            calendar.setYear(updatedCalendar.getYear());
+            calendar.setMonth(updatedCalendar.getMonth());
 
             return calendarRepository.save(calendar);
         }else{ // 기존 캘린더가 없을 경우

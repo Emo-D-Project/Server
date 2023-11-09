@@ -17,11 +17,9 @@ public class CalendarEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long calendarId;
+    private int year;
     @Column
-    private String eventName;
-    @Column
-    private Date date;
+    private int month;
     @Column
     private Emotion emotion;
 
