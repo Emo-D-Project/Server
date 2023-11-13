@@ -127,6 +127,22 @@ public class DiaryService {
     }
     */
     
+    public Diary searchPopular(Long user_id)
+    {
+    	List<Diary> list = diaryRepository.findByUserId(user_id);
+    	int i, max=0;
+    	Diary popular = new Diary();
+    	
+    	for(i=0; i<list.size(); i++)
+    	{
+    		if(list.get(i).getEmpathy() > max)
+    			popular = list.get(i);
+    	}
+    	return popular;
+    }
+    
+
+    
     @Transactional
     public Diary update(long id, UpdateDiaryRequest request) {
         Diary article = diaryRepository.findById(id)
@@ -145,6 +161,5 @@ public class DiaryService {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
     	if(!(diary.getUserId() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");
- 
         }
    }
