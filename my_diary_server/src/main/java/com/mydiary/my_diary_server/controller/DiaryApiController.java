@@ -65,7 +65,14 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
-
+    
+    @GetMapping("/report")
+    @Operation(summary="감정통계")
+    public DiaryResponse analysis()
+    {
+    	return null;
+    }
+    
     @DeleteMapping("/delete/{id}")
     @Operation(summary="일기 삭제")
     public ResponseEntity<Void> deleteDiary(@PathVariable long id) {
