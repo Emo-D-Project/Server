@@ -59,5 +59,13 @@ public class Diary {
         this.is_comm = is_comm;
         this.updatedAt = LocalDateTime.now();
     }
+    
+    public void recommend(Boolean is_re)
+    {
+    	if(is_re == true)
+    		this.empathy += 1;
+    	else
+    		this.empathy -= 1;
+    }
 }
 

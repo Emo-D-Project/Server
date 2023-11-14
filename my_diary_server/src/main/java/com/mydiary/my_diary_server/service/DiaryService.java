@@ -1,9 +1,11 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Diary;
-
+import com.mydiary.my_diary_server.domain.Likes;
 import com.mydiary.my_diary_server.dto.*;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
+import com.mydiary.my_diary_server.repository.LikesRepository;
+
 import org.springframework.stereotype.Service;
 
 
@@ -27,7 +29,8 @@ import com.mydiary.my_diary_server.service.UserService;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
-
+    private final LikesRepository likesRepository;
+    
     public Diary save(AddDiaryRequest req, String author) {
         return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
     }
@@ -190,6 +193,25 @@ public class DiaryService {
     		}
     	}
     	return result;
+    }
+    
+    public void recommend(LikesDTO dto)
+    {
+    	Likes likes = likesRepository.findByUserIdAndPostId(dto.getUserId(), dto.getPostId());
+    	Diary article = diaryRepository.findById(dto.getPostId())
+    			.orElseThrow(() -> new IllegalArgumentException("not found : " + dto.getPostId()));
+    		
+    	if(likes == null)
+    	{
+    		article.recommend(true);
+    		likesRepository.save(new Likes(dto.getPostId(), dto.getUserId()));
+    	}
+    		
+    	else
+    	{
+    		article.recommend(false);
+    		likesRepository.delete(likes);
+    	}
     }
     
     @Transactional
