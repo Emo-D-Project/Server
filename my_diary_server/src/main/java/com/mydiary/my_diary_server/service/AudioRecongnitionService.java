@@ -15,7 +15,7 @@ import java.util.Base64;
 
 import com.google.gson.Gson;
 
-public class SpeechRecongnitionService {
+public class AudioRecongnitionService {
 
     public String run(String audioUrl){
         String openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition";
