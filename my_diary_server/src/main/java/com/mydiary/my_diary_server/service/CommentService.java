@@ -22,6 +22,11 @@ public class CommentService {
 				);
 	}
 	
+	public Integer counts(Long post_id)
+	{
+		return commentRepository.findByPostId(post_id).size();
+	}
+	
 	public List<Comment> find(Long post_id)
 	{
 		return commentRepository.findByPostId(post_id);

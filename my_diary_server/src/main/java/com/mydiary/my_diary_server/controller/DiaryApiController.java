@@ -1,7 +1,7 @@
 package com.mydiary.my_diary_server.controller;
-import com.mydiary.my_diary_server.domain.Diary;
+import com.mydiary.my_diary_server.domain.*;
 import com.mydiary.my_diary_server.dto.AddDiaryRequest;
-import com.mydiary.my_diary_server.dto.DiaryResponse;
+import com.mydiary.my_diary_server.dto.*;
 import com.mydiary.my_diary_server.dto.UpdateDiaryRequest;
 import com.mydiary.my_diary_server.service.DiaryService;
 
@@ -65,7 +65,14 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
-
+    
+    @GetMapping("/report")
+    @Operation(summary="감정통계")
+    public DiaryResponse analysis()
+    {
+    	return null;
+    }
+    
     @DeleteMapping("/delete/{id}")
     @Operation(summary="일기 삭제")
     public ResponseEntity<Void> deleteDiary(@PathVariable long id) {
@@ -84,6 +91,15 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(updatedDiary);
     }
+    
+    @PutMapping("/recommend/{id}")
+    @Operation(summary="공감")
+    public void recommendDiary(@PathVariable long id, Principal principal)
+    {
+    	LikesDTO like = new LikesDTO(id, Long.parseLong(principal.getName()));
+    	diaryService.recommend(like);
+    }
+  
 }
 
 

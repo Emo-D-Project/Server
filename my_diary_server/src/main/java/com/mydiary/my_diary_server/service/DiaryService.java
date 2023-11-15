@@ -1,19 +1,24 @@
 package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Diary;
-
+import com.mydiary.my_diary_server.domain.Likes;
 import com.mydiary.my_diary_server.dto.*;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
+import com.mydiary.my_diary_server.repository.LikesRepository;
+
 import org.springframework.stereotype.Service;
 
 
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import org.checkerframework.checker.units.qual.radians;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +29,8 @@ import com.mydiary.my_diary_server.service.UserService;
 public class DiaryService {
 
     private final DiaryRepository diaryRepository;
-
+    private final LikesRepository likesRepository;
+    
     public Diary save(AddDiaryRequest req, String author) {
         return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
     }
@@ -108,7 +114,7 @@ public class DiaryService {
         Diary article = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        authorizeArticleAuthor(article);
+       // authorizeArticleAuthor(article);
       //authorize
         diaryRepository.delete(article);
     }
@@ -126,6 +132,87 @@ public class DiaryService {
     	
     }
     */
+    
+    public Diary searchPopular(Long user_id)
+    {
+    	List<Diary> list = diaryRepository.findByUserId(user_id);
+    	int i, max=0;
+    	Diary popular = new Diary();
+    	
+    	for(i=0; i<list.size(); i++)
+    	{
+    		if(list.get(i).getEmpathy() > max)
+    			popular = list.get(i);
+    	}
+    	return popular;
+    }
+    
+    public CalendarInfo setCalendar(LocalDateTime date, String author)
+    {
+    	CalendarInfo cal = new CalendarInfo(date);
+    	List<Diary> calCon = findByMonth(date, author);
+    	
+    	cal.setIds(calCon);
+    	return cal;
+    } 
+
+    
+    public List<CalendarResponse> getCalendar(CalendarInfo info)
+    {
+    	List<CalendarResponse> res = new ArrayList<CalendarResponse>();
+    	Integer day;
+    	String emotion;
+    	Long id;
+    	
+    	int i;
+    	for(i=0; i<info.getIds().size(); i++)
+    	{
+    		day = info.getIds().get(i).getCreatedAt().getDayOfMonth();
+    		emotion = info.getIds().get(i).getEmotion();
+    		id = info.getIds().get(i).getId();
+    		
+    		res.add(new CalendarResponse(id, day, emotion));	
+    	}
+    	return res;
+    }
+    
+    public List<Diary> findByMonth(LocalDateTime date, String author)
+    {
+    	List<Diary> data = diaryRepository.findByUserId(Long.parseLong(author));
+    	List<Diary> result = new ArrayList<Diary>();
+    	
+    	int i;
+    	for(i=0; i<data.size(); i++)
+    	{
+    		if(data.get(i).getCreatedAt().getMonth() == date.getMonth())
+    		{
+    			if(data.get(i).getCreatedAt().getYear() == date.getYear())
+    			{
+    				result.add(data.get(i));
+    			}
+    		}
+    	}
+    	return result;
+    }
+    
+    public void recommend(LikesDTO dto)
+    {
+    	Likes likes = likesRepository.findByUserIdAndPostId(dto.getUserId(), dto.getPostId());
+    	Diary article = diaryRepository.findById(dto.getPostId())
+    			.orElseThrow(() -> new IllegalArgumentException("not found : " + dto.getPostId()));
+    		
+    	if(likes == null)
+    	{
+    		article.recommend(true);
+    		likesRepository.save(new Likes(dto.getPostId(), dto.getUserId()));
+    	}
+    		
+    	else
+    	{
+    		article.recommend(false);
+    		likesRepository.delete(likes);
+    	}
+    }
     
     @Transactional
     public Diary update(long id, UpdateDiaryRequest request) {
@@ -145,6 +232,5 @@ public class DiaryService {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
     	if(!(diary.getUserId() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");
- 
         }
    }
