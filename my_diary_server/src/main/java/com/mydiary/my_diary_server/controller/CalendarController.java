@@ -15,29 +15,32 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/calendars")
 public class CalendarController {
     private final DiaryService diaryService;
-
     
     @Operation (summary = "캘린더 정보를 받아오는 기능")
-    @GetMapping("/date/{date}")
-    public ResponseEntity<List<CalendarResponse>> getCalender(
-    		@PathVariable(value="date") @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss") LocalDateTime date, Principal principal) {
-    	CalendarInfo info = diaryService.setCalendar(date, principal.getName());
-    	
-    	List<CalendarResponse> res = diaryService.getCalendar(info)
-    			.stream()
-    			.map(CalendarResponse::new)
-    			.toList();
-    	
-    	return ResponseEntity.ok()
-    			.body(res);
-    }
+    @GetMapping("/date")
+	public ResponseEntity<Map<String, String>> getCalender(Principal principal) {
+		// 다이어리 정보 받아오기 (date, emotion)
+		List<CalendarResponse> calendarResponses = diaryService.getCalendar(Long.parseLong(principal.getName()));
+
+		// List<CalendarResponse>를 Map<Date, String>으로 직접 변환
+		Map<String, String> response = new HashMap<>();
+		for (CalendarResponse calendarResponse : calendarResponses) {
+			response.put(calendarResponse.getFormattedDate(), calendarResponse.getEmotion());
+		}
+
+		return ResponseEntity.ok().body(response);
+
+	}
 }
 
 

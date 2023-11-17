@@ -13,16 +13,11 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import org.checkerframework.checker.units.qual.radians;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import com.mydiary.my_diary_server.service.UserService;
 
 @RequiredArgsConstructor
 @Service
@@ -147,33 +142,23 @@ public class DiaryService {
     	return popular;
     }
     
-    public CalendarInfo setCalendar(LocalDateTime date, String author)
+    public CalendarInfo setCalendar(String author)
     {
-    	CalendarInfo cal = new CalendarInfo(date);
-    	List<Diary> calCon = findByMonth(date, author);
+    	CalendarInfo cal = new CalendarInfo();
+    	List<Diary> calCon = diaryRepository.findByUserId(Long.parseLong(author));
     	
-    	cal.setIds(calCon);
+    	cal.setDiaries(calCon);
     	return cal;
     } 
 
     
-    public List<CalendarResponse> getCalendar(CalendarInfo info)
+    public List<CalendarResponse> getCalendar(long userId)
     {
-    	List<CalendarResponse> res = new ArrayList<CalendarResponse>();
-    	Integer day;
-    	String emotion;
-    	Long id;
-    	
-    	int i;
-    	for(i=0; i<info.getIds().size(); i++)
-    	{
-    		day = info.getIds().get(i).getCreatedAt().getDayOfMonth();
-    		emotion = info.getIds().get(i).getEmotion();
-    		id = info.getIds().get(i).getId();
-    		
-    		res.add(new CalendarResponse(id, day, emotion));	
-    	}
-    	return res;
+    	List<Diary> diaries = diaryRepository.findByUserId(userId);
+
+		List<CalendarResponse> responses = diaries.stream().map(CalendarResponse::new).toList();
+
+		return responses;
     }
     
     public List<Diary> findByMonth(LocalDateTime date, String author)
