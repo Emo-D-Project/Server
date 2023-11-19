@@ -100,6 +100,8 @@ public class DiaryApiController {
     	LikesDTO like = new LikesDTO(id, Long.parseLong(principal.getName()));
     	diaryService.recommend(like);
     }
+
+    // 주석추가
   
 }
 
