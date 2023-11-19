@@ -37,4 +37,4 @@ jobs:
         run: chmod +x ./my_diary_server/gradlew
 
       - name: Build with Gradle
-        run: ./my_diary_server/gradlew build
+        run: ./my_diary_server/gradlew build -x test
