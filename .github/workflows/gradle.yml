@@ -27,9 +27,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-
-      - name: Grant Execute Permission For Gradlew & Build gradle
-        run: |
-          cd ./my_diary_server/
-          chmod +x gradlew
-          ./gradlew build
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        with:
+          arguments: build
