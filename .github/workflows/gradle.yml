@@ -21,17 +21,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set up JDK 17
-        uses: ./my_diary_server/actions/setup-java@v3
+        uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: "temurin"
+
       - name: Validate Gradle wrapper
-        uses: ./my_diary_server/gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+        run: ./my_diary_server/gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
+
       - name: Run chmod to make gradlew executable
-        run: ./my_diary_server/chmod +x ./gradlew
+        run: chmod +x ./my_diary_server/gradlew
+
       - name: Build with Gradle
-        uses: ./my_diary_server/gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-        with:
-          arguments: build
+        run: ./my_diary_server/gradlew build
