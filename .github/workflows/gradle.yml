@@ -30,6 +30,6 @@ jobs:
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
-          cd ./my_diary_server/
+          cd ./my_diary_server
           chmod +x gradlew
           ./gradlew build
