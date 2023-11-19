@@ -65,6 +65,7 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
+    // 주석추가
     
     @GetMapping("/report")
     @Operation(summary="감정통계")
@@ -99,6 +100,10 @@ public class DiaryApiController {
     	LikesDTO like = new LikesDTO(id, Long.parseLong(principal.getName()));
     	diaryService.recommend(like);
     }
+
+    // 주석추가
+    // 하나 더 추가
+    // 또111111111444442222222223333666611111
   
 }
 
