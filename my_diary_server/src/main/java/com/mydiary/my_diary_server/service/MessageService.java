@@ -1,5 +1,6 @@
 package com.mydiary.my_diary_server.service;
 
+import com.mydiary.my_diary_server.domain.ChatRoom;
 import com.mydiary.my_diary_server.domain.Message;
 import com.mydiary.my_diary_server.domain.User;
 import com.mydiary.my_diary_server.dto.AddMessageRequest;
@@ -8,9 +9,7 @@ import com.mydiary.my_diary_server.repository.MessageRepository;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MessageService {
@@ -63,10 +62,35 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public List<Message> findAllBySenderId(Long id) {
-        return messageRepository.findAllBySenderId(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+    public List<Message> findChats(Long otherUserId, Long userId) {
+        return messageRepository.findByReceiverIdAndSenderIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("not found find chats / id : " + userId + "otherUserId: " + otherUserId));
     }
 
 
+    public List<ChatRoom> getAllChatRooms(Long userId) {
+        // 사용자의 id와 관련된 메시지를 찾아 채팅방으로 반환
+        List<Message> userMessages = messageRepository.findByReceiverIdOrSenderId(userId, userId);
+
+        // 각 채팅방별로 마지막 메시지와 대화 상대를 가져옴
+        Map<Long, ChatRoom> chatRoomsMap = new HashMap<>();
+        for (Message message : userMessages) {
+            Long otherUserId = (message.getReceiverId().equals(userId)) ? message.getSenderId() : message.getReceiverId();
+
+            ChatRoom chatRoom = chatRoomsMap.get(otherUserId);
+            if (chatRoom == null) {
+                chatRoom = new ChatRoom(otherUserId, "Room with User " + otherUserId);
+            }
+
+            // 마지막 메시지 업데이트
+            chatRoom.setLastMessage(message.getContent());
+            chatRoom.setLastMessageSentAt(message.getSentAt());
+            chatRoom.setName(userRepository.findById(otherUserId).get().getUsername());
+
+            chatRoomsMap.put(otherUserId, chatRoom);
+        }
+
+        // Map의 값들을 List로 반환
+        return new ArrayList<>(chatRoomsMap.values());
+    }
 }

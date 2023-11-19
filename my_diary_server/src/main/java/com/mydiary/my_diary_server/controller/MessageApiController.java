@@ -1,6 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.domain.Message;
+import com.mydiary.my_diary_server.domain.ChatRoom;
 import com.mydiary.my_diary_server.dto.AddMessageRequest;
 import com.mydiary.my_diary_server.dto.MessageResponse;
 import com.mydiary.my_diary_server.service.MessageService;
@@ -23,10 +23,10 @@ public class MessageApiController {
     @Autowired
     MessageApiController(MessageService messageService){this.messageService = messageService;}
 
-    @Operation(summary = "받은 쪽지 확인")
-    @GetMapping()
-    public ResponseEntity<List<MessageResponse>> findAllMyMessage(Principal principal) {
-        List<MessageResponse> messages = messageService.findAllBySenderId(Long.parseLong(principal.getName()))
+    @GetMapping("/chat/{otherUserId}")
+    @Operation(summary = "채팅목록 불러오기")
+    public ResponseEntity<List<MessageResponse>> findChats(@PathVariable Long otherUserId, Principal principal) {
+        List<MessageResponse> messages = messageService.findChats(otherUserId, Long.parseLong(principal.getName()))
                 .stream()
                 .map(MessageResponse::new)
                 .toList();
@@ -35,19 +35,21 @@ public class MessageApiController {
                 .body(messages);
     }
 
-    @Operation(summary = "쪽지 등록")
+
     @PostMapping()
+    @Operation(summary = "쪽지 등록")
     public ResponseEntity<MessageResponse> addMessage(@RequestBody AddMessageRequest request, Principal principal) {
         MessageResponse savedMessage = messageService.save(request, Long.parseLong(principal.getName()));
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMessage);
     }
 
-//    @Operation (summary = "쪽지 삭제")
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteMessage(@PathVariable Long id) {
-//        messageService.deleteMessage(id);
-//        return ResponseEntity.ok()
-//                .build();
-//    }
+    @GetMapping("/chatList")
+    @Operation(summary = "채팅방 목록 불러오기")
+    public ResponseEntity<List<ChatRoom>> getAllChatRooms(Principal principal) {
+        List<ChatRoom> chatRooms = messageService.getAllChatRooms(Long.parseLong(principal.getName()));
+        return ResponseEntity.ok(chatRooms);
+    }
+
+
 }
 
