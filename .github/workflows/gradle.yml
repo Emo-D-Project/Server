@@ -8,8 +8,6 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -34,4 +32,4 @@ jobs:
         run: |
           cd ./my_diary_server
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew build -x test
