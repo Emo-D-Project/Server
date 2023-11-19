@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="42444fe6-d6ec-4002-a870-ea957aaf3d33" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/domain/ChatRoom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_diary_server/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/my_diary_server/app.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/controller/MessageApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/controller/MessageApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/repository/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/repository/MessageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/service/MessageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/my_diary_server/src/main/java/com/mydiary/my_diary_server/service/MessageService.java" afterDir="false" />
-    </list>
+    <list default="true" id="42444fe6-d6ec-4002-a870-ea957aaf3d33" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +43,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/Users/User/Documents/GitHub/Server/my_diary_server",
+    "last_opened_file_path": "C:/Users/User/Documents/GitHub/Server",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -72,6 +65,7 @@
       <workItem from="1699356341762" duration="19000" />
       <workItem from="1699356393118" duration="254000" />
       <workItem from="1700360648654" duration="1071000" />
+      <workItem from="1700374637111" duration="20000" />
     </task>
     <servers />
   </component>
