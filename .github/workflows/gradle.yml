@@ -50,7 +50,7 @@ jobs:
       - name: Docker Hub push
         run: docker push ${{secrets.DOCKERHUB_ID}}/test-server 
     
-      -name: Deploy to Instance
+      - name: Deploy to Instance
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{secrets.GCP_HOST}}
