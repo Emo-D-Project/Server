@@ -44,7 +44,7 @@ jobs:
           
       - name: Docker image build
         run: |
-          cd ./server/9in
+          cd ./my_diary_server
           docker build -t ${{secrets.DOCKERHUB_ID}}/test-server .
       
       - name: Docker Hub push
