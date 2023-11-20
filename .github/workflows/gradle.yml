@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  spring-build:
 
     runs-on: ubuntu-latest
 
