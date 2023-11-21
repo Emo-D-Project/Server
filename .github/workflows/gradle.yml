@@ -35,6 +35,7 @@ jobs:
           cd ./my_diary_server
           chmod +x gradlew
           ./gradlew build -x test
+          
       - name: Docker hub login
         uses: docker/login-action@v3
         with:
