@@ -36,6 +36,15 @@ jobs:
           cd ./my_diary_server
           chmod +x gradlew
           ./gradlew build -x test
+
+      - name: Check JAR in /app directory
+        run: |
+          docker run -d --name test-container wintery7/test-server
+          echo "Contents of /app directory:"
+          docker exec test-container ls /app
+          docker stop test-container
+          docker rm test-container
+
       - name: Docker hub login
         uses: docker/login-action@v3
         with:

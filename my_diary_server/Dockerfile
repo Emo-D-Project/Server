@@ -9,4 +9,3 @@ COPY build/libs/*.jar app.jar
 
 # Your additional Dockerfile configuration goes here
 ENTRYPOINT ["java","-jar","/app.jar"]
-   
