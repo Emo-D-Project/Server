@@ -62,4 +62,4 @@ jobs:
             sudo docker rm -f ${docker ps -qa} 2>/dev/null || true
             cd emoD_project/server
             sudo docker-compose up -d
-            sudo docker image prune -f    
+            sudo docker image prune -f     
