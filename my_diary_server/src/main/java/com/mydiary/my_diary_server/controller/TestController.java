@@ -16,6 +16,11 @@ public class TestController {
     public ResponseEntity<String> handleDefaultRequest(@RequestBody String name) {
         return ResponseEntity.status(HttpStatus.OK).body(name);
     }
+
+    @PutMapping()
+    public ResponseEntity<String> handlePutRequest(@RequestBody String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(name);
+    }
 //    @PostMapping("/audioRecognition")
 //    public ResponseEntity<String> handleAudioRecognition(@RequestBody String audioUrl){
 //        return ResponseEntity.status(HttpStatus.OK).body(new SpeechRecongnitionService().run(audioUrl));
