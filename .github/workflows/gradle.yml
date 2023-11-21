@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   spring-build:
-
+  
     runs-on: ubuntu-latest
 
     steps:
