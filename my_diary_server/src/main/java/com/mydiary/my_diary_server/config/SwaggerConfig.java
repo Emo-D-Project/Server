@@ -22,15 +22,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
-
-//@OpenAPIDefinition(
-//        info = @Info(title = "Emo:D Service API 명세서",
-//                description = "Emo:D 서비스 API 명세서",
-//                version = "v1"))
-
 @OpenAPIDefinition
         (
-                info = @Info(title = "[행태분석 솔루션] API 명세서", version = "0.1"),
+                info = @Info(title = "[Emo:D] API 명세서", version = "0.1"),
                 security = { @SecurityRequirement(name = "Authorization")}
         )
 @SecurityScheme
@@ -61,22 +55,4 @@ public class SwaggerConfig {
                 .pathsToMatch("/bhs/mkd/**")
                 .build();
     }
-//    @Bean
-//    public OpenAPI springOpenApi() {
-//        return new OpenAPI().info(new io.swagger.v3.oas.models.info.Info()
-//                .title("API")
-//                .description("Swagger API 설정")
-//                .version("v0.0.1"));
-//    }
-//
-//    @Bean
-//    @ConditionalOnMissingBean
-//    @ConditionalOnProperty(
-//            name = {"springdoc.use-management-port"},
-//            havingValue = "false",
-//            matchIfMissing = true
-//    )
-//    SwaggerWelcomeWebMvc swaggerWelcome(SwaggerUiConfigProperties swaggerUiConfig, SpringDocConfigProperties springDocConfigProperties, SwaggerUiConfigParameters swaggerUiConfigParameters, SpringWebProvider springWebProvider) {
-//        return new SwaggerWelcomeWebMvc(swaggerUiConfig, springDocConfigProperties, swaggerUiConfigParameters, springWebProvider);
-//    }
 }

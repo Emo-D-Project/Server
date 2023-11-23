@@ -3,6 +3,9 @@ package com.mydiary.my_diary_server.dto;
 import com.mydiary.my_diary_server.domain.Diary;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Getter
 public class DiaryResponse {
@@ -11,6 +14,7 @@ public class DiaryResponse {
     private long user_id;
     private long id;
     private int empathy;
+    private LocalDateTime createdAt;
     
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
@@ -18,5 +22,6 @@ public class DiaryResponse {
         this.user_id = diary.getUserId();
         this.id = diary.getId();
         this.empathy = diary.getEmpathy();
+        this.createdAt = diary.getCreatedAt();
     }
 }
