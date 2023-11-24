@@ -40,8 +40,12 @@ public class Diary {
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
     
+    @Lob
+    @Column(name = "file_data")
+    private byte[] fileData;
+    
     @Builder
-    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
+    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm, byte[] fileData){
     	this.userId = user_id;
     	this.author = Long.toString(user_id);
     	this.empathy = 0;
@@ -50,6 +54,7 @@ public class Diary {
     	this.is_comm = is_share;
     	this.is_share = is_comm;
     	this.CreatedAt = LocalDateTime.now();
+    	this.fileData = fileData;
     }
 
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {

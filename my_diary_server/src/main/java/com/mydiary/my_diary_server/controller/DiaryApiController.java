@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.List;
@@ -30,6 +31,12 @@ public class DiaryApiController {
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
+    }
+    
+    @PostMapping("/upload")
+    public void uploadFile(@RequestParam("file") MultipartFile file)
+    {
+    	
     }
 
     @GetMapping("/read")

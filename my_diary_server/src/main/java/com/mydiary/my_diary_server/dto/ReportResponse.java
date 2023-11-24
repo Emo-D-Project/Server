@@ -16,7 +16,7 @@ public class ReportResponse {
 	public Integer leastEmotion;
 	public String comment;
 
-	public Integer[] emotions = {0, 0, 0, 0, 0, 0, 0};
+	public Double[] emotions = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	
 	public ReportResponse(Report report)
 	{
@@ -26,12 +26,12 @@ public class ReportResponse {
 		this.leastEmotion = report.getLeastEmotion();
 		this.mostEmotion = report.getMostEmotion();
 		this.comment = report.getComment();
-		this.emotions[0] = report.getSmile();
-		this.emotions[1] = report.getFlutter();
-		this.emotions[2] = report.getAngry();
-		this.emotions[3] = report.getAnnoying();
-		this.emotions[4] = report.getTired();
-		this.emotions[5] = report.getSad();
-		this.emotions[6]= report.getCalmness();
+		this.emotions[0] = Double.valueOf(report.getSmile());
+		this.emotions[1] = Double.valueOf(report.getFlutter());
+		this.emotions[2] = Double.valueOf(report.getAngry());
+		this.emotions[3] = Double.valueOf(report.getAnnoying());
+		this.emotions[4] = Double.valueOf(report.getTired());
+		this.emotions[5] = Double.valueOf(report.getSad());
+		this.emotions[6]= Double.valueOf(report.getCalmness());
 	}
 }
