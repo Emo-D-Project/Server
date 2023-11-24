@@ -37,7 +37,7 @@ public class DiaryService {
     private final ReportRepository reportRepository;
     
     public Diary save(AddDiaryRequest req, String author) {
-        return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
+        return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm(), null));
     }
 
     
