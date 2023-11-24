@@ -39,8 +39,8 @@ public class Report {
 	private int year;
 	private int point;
 
-	private String mostEmotion;
-	private String leastEmotion;
+	private Integer mostEmotion;
+	private Integer leastEmotion;
 	private String comment;
 
 	private int smile;

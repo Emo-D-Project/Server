@@ -216,55 +216,8 @@ public class DiaryService {
     		}
     	}
     	
-    	switch(maxIndex)
-    	{
-    	case 0:
-    		report.setMostEmotion("smile");
-    		break;
-    	case 1:
-    		report.setMostEmotion("flutter");
-    		break;
-    	case 2:
-    		report.setMostEmotion("angry");
-    		break;
-    	case 3:
-    		report.setMostEmotion("annoying");
-    		break;
-    	case 4:
-    		report.setMostEmotion("tired");
-    		break;
-    	case 5:
-    		report.setMostEmotion("sad");
-    		break;
-    	default:
-    		report.setMostEmotion("calmness");
-    		break;
-    	}
-    	
-    	switch(minIndex)
-    	{
-    	case 0:
-    		report.setLeastEmotion("smile");
-    		break;
-    	case 1:
-    		report.setLeastEmotion("flutter");
-    		break;
-    	case 2:
-    		report.setLeastEmotion("angry");
-    		break;
-    	case 3:
-    		report.setLeastEmotion("annoying");
-    		break;
-    	case 4:
-    		report.setLeastEmotion("tired");
-    		break;
-    	case 5:
-    		report.setLeastEmotion("sad");
-    		break;
-    	default:
-    		report.setLeastEmotion("calmness");
-    		break;
-    	}
+    	report.setLeastEmotion(minIndex);
+    	report.setMostEmotion(maxIndex);
     	
     	Integer one = emotions[0] + emotions[1];
     	Integer two = emotions[2] + emotions[3] + emotions[4] + emotions[5];

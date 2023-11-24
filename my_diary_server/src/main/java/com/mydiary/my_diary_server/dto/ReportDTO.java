@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 public class ReportDTO {
 	YearMonth date;
-	String mostEmotion;
-	String leastEmotion;
+	Integer mostEmotion;
+	Integer leastEmotion;
 	Integer[] emotionNums;
 	String comment;
 	Integer score;
