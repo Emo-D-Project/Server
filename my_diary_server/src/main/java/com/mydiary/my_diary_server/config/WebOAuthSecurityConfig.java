@@ -61,8 +61,8 @@ public class WebOAuthSecurityConfig {
         http.exceptionHandling(exceptionHandling -> exceptionHandling
                 .defaultAuthenticationEntryPointFor(new
                                 HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                        new AntPathRequestMatcher("/api/**")))
-                ;
+                        new AntPathRequestMatcher("/api/**")));
+
 
         return http.build();
     }
@@ -83,8 +83,4 @@ public class WebOAuthSecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
-
-
 }
