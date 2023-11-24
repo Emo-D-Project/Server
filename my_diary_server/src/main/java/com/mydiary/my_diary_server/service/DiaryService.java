@@ -3,10 +3,12 @@ package com.mydiary.my_diary_server.service;
 import com.mydiary.my_diary_server.domain.Comment;
 import com.mydiary.my_diary_server.domain.Diary;
 import com.mydiary.my_diary_server.domain.Likes;
+import com.mydiary.my_diary_server.domain.Report;
 import com.mydiary.my_diary_server.dto.*;
 import com.mydiary.my_diary_server.repository.CommentRepository;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
 import com.mydiary.my_diary_server.repository.LikesRepository;
+import com.mydiary.my_diary_server.repository.ReportRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -32,11 +34,13 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final LikesRepository likesRepository;
     private final CommentRepository commentsRepository;
+    private final ReportRepository reportRepository;
     
     public Diary save(AddDiaryRequest req, String author) {
         return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
     }
 
+    
     public List<Diary> findAll() {
         return diaryRepository.findAll();
     }
@@ -87,9 +91,9 @@ public class DiaryService {
     			counts[3]++;
     		}
     	}
-
+  
     	int max = 0; int maxIndex = 0;
-    	for(i=0; i>4; i++)
+    	for(i=0; i<4; i++)
     	{
     		if(counts[i] > max)
     		{
@@ -145,12 +149,149 @@ public class DiaryService {
     	
     	for(i=0; i<list.size(); i++)
     	{
-    		if(list.get(i).getEmpathy() > max)
+    		if(list.get(i).getEmpathy() >= max)
+    		{
     			popular = list.get(i);
+    			max = list.get(i).getEmpathy();
+    		}
+    			
     	}
     	return popular;
     }
     
+    public ReportDTO createReport(String author, String comment)
+    {
+    	ReportDTO report = new ReportDTO();
+    	LocalDateTime now = LocalDateTime.now();
+    	
+    	report.setDate(YearMonth.from(now));
+    	
+    	List<Diary> list = findByMonth(now, author);
+    	
+    	report.setComment(comment);
+    	
+    	int i;
+    	Integer[] emotions = {0, 0, 0, 0, 0, 0, 0};
+    	for(i=0; i<list.size(); i++)
+    	{
+    		if(list.get(i).getEmotion().equals("smile"))
+    			emotions[0]++;
+    		else if(list.get(i).getEmotion().equals("flutter"))
+    			emotions[1]++;
+    		else if(list.get(i).getEmotion().equals("angry"))
+    			emotions[2]++;
+    		else if(list.get(i).getEmotion().equals("annoying"))
+    			emotions[3]++;
+    		else if(list.get(i).getEmotion().equals("tired"))
+    			emotions[4]++;
+    		else if(list.get(i).getEmotion().equals("sad"))
+    			emotions[5]++;
+    		else if(list.get(i).getEmotion().equals("calmness"))
+    			emotions[6]++;
+    	}
+    	
+    	int max, maxIndex, min, minIndex;
+    	
+    	max = emotions[0];
+    	maxIndex = emotions[0];
+    	min = 2;
+    	minIndex = emotions[0];
+
+    	report.setEmotionNums(emotions);
+    	
+    	for(i=0; i<7; i++)
+    	{
+    		if(emotions[i] > max)
+    		{
+    			max = emotions[i];
+    			maxIndex = i;
+    		}
+    		if(emotions[i] < min)
+    		{
+    			if(emotions[i] != 0)
+    			{
+        			min = emotions[i];
+        			minIndex = i;	
+    			}
+    		}
+    	}
+    	
+    	switch(maxIndex)
+    	{
+    	case 0:
+    		report.setMostEmotion("smile");
+    		break;
+    	case 1:
+    		report.setMostEmotion("flutter");
+    		break;
+    	case 2:
+    		report.setMostEmotion("angry");
+    		break;
+    	case 3:
+    		report.setMostEmotion("annoying");
+    		break;
+    	case 4:
+    		report.setMostEmotion("tired");
+    		break;
+    	case 5:
+    		report.setMostEmotion("sad");
+    		break;
+    	default:
+    		report.setMostEmotion("calmness");
+    		break;
+    	}
+    	
+    	switch(minIndex)
+    	{
+    	case 0:
+    		report.setLeastEmotion("smile");
+    		break;
+    	case 1:
+    		report.setLeastEmotion("flutter");
+    		break;
+    	case 2:
+    		report.setLeastEmotion("angry");
+    		break;
+    	case 3:
+    		report.setLeastEmotion("annoying");
+    		break;
+    	case 4:
+    		report.setLeastEmotion("tired");
+    		break;
+    	case 5:
+    		report.setLeastEmotion("sad");
+    		break;
+    	default:
+    		report.setLeastEmotion("calmness");
+    		break;
+    	}
+    	
+    	Integer one = emotions[0] + emotions[1];
+    	Integer two = emotions[2] + emotions[3] + emotions[4] + emotions[5];
+    	
+    	if(one > two)
+    	{
+    		if(one > emotions[6])
+    			report.setScore(1);
+    		else
+    			report.setScore(3);
+    	}
+    	else
+    	{
+    		if(two > emotions[6])
+    			report.setScore(2);
+    		else
+    			report.setScore(3);
+    	}
+    	reportRepository.save(new Report(Long.parseLong(author), report));
+    	return report;
+    }
+    
+    public List<Report> getReports(String author)
+    {
+    	List<Report> list = reportRepository.findByUserId(Long.parseLong(author));
+    	return list;
+    }
     
     public Integer getCommentsNums(Diary diary)
     {
@@ -268,9 +409,10 @@ public class DiaryService {
     	int i, result = 0;
     	for(i=0; i<data.size(); i++)
     	{
-    		if(YearMonth.from(data.get(i).getCreatedAt()) == date )
+    		if(data.get(i).getCreatedAt().getYear() == date.getYear())
     		{
-    			result++;
+    			if(data.get(i).getCreatedAt().getMonthValue() == date.getMonthValue())
+    				result++;
     		}
     	}
     	return result;
