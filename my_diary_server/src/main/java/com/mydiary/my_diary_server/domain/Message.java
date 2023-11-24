@@ -30,6 +30,9 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(nullable = false)
+    private boolean isRead;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_at")
     private LocalDateTime sentAt;

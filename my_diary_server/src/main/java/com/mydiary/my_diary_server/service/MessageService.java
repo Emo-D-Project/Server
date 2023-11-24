@@ -34,6 +34,7 @@ public class MessageService {
                 .receiverId(receiver.get().getId())
                 .content(request.getContent())
                 .sentAt(request.getSentAt())
+                .isRead(false) // 쪽지 초기값은 안읽은 모두 
                 .build()));
     }
 
@@ -63,8 +64,13 @@ public class MessageService {
     }
 
     public List<Message> findChats(Long otherUserId, Long userId) {
-        return messageRepository.findByReceiverIdAndSenderIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId)
+        List<Message> messages = messageRepository.findByReceiverIdAndSenderIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found find chats / id : " + userId + "otherUserId: " + otherUserId));
+        for (Message message : messages) {
+            message.setRead(true);
+        }
+        
+        return messages;
     }
 
 
