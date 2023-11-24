@@ -1,41 +1,37 @@
 package com.mydiary.my_diary_server.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.mydiary.my_diary_server.domain.Report;
 
 import lombok.Getter;
 
 @Getter
 public class ReportResponse {
-	public int month;
-	public int year;
+	public LocalDate date;
 	public int point;
 
-	public String mostEmotion;
-	public String leastEmotion;
+	public Integer mostEmotion;
+	public Integer leastEmotion;
 	public String comment;
 
-	public int smile;
-	public int flutter;
-	public int angry;
-	public int annoying;
-	public int tired;
-	public int sad;
-	public int calmness;
+	public Integer[] emotions = {0, 0, 0, 0, 0, 0, 0};
 	
 	public ReportResponse(Report report)
 	{
-		this.month = report.getMonth();
-		this.year = report.getYear();
+		this.date = LocalDate.of(report.getYear(), report.getMonth(), 1);
 		this.point = report.getPoint();
 		this.mostEmotion = report.getMostEmotion();
 		this.leastEmotion = report.getLeastEmotion();
+		this.mostEmotion = report.getMostEmotion();
 		this.comment = report.getComment();
-		this.smile = report.getSmile();
-		this.flutter = report.getFlutter();
-		this.angry = report.getAngry();
-		this.annoying = report.getAnnoying();
-		this.tired = report.getTired();
-		this.sad = report.getSad();
-		this.calmness = report.getCalmness();
+		this.emotions[0] = report.getSmile();
+		this.emotions[1] = report.getFlutter();
+		this.emotions[2] = report.getAngry();
+		this.emotions[3] = report.getAnnoying();
+		this.emotions[4] = report.getTired();
+		this.emotions[5] = report.getSad();
+		this.emotions[6]= report.getCalmness();
 	}
 }
