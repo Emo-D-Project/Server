@@ -1,8 +1,10 @@
 package com.mydiary.my_diary_server.service;
 
+import com.mydiary.my_diary_server.domain.Comment;
 import com.mydiary.my_diary_server.domain.Diary;
 import com.mydiary.my_diary_server.domain.Likes;
 import com.mydiary.my_diary_server.dto.*;
+import com.mydiary.my_diary_server.repository.CommentRepository;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
 import com.mydiary.my_diary_server.repository.LikesRepository;
 
@@ -16,8 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +31,7 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final LikesRepository likesRepository;
+    private final CommentRepository commentsRepository;
     
     public Diary save(AddDiaryRequest req, String author) {
         return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm() ));
@@ -42,6 +49,7 @@ public class DiaryService {
     public Diary findById(long id) {
         return diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
+    
     }
 
     public Integer getCount(Long user_id)
@@ -128,6 +136,7 @@ public class DiaryService {
     }
     */
     
+    //
     public Diary searchPopular(Long user_id)
     {
     	List<Diary> list = diaryRepository.findByUserId(user_id);
@@ -140,6 +149,19 @@ public class DiaryService {
     			popular = list.get(i);
     	}
     	return popular;
+    }
+    
+    
+    public Integer getCommentsNums(Diary diary)
+    {
+    	List<Comment> list = commentsRepository.findByPostId(diary.getId());
+    	int i;
+    	
+    	for(i=0; i<list.size(); i++)
+    	{
+    		
+    	}
+    	return i;
     }
     
     public CalendarInfo setCalendar(String author)
@@ -175,6 +197,80 @@ public class DiaryService {
     			{
     				result.add(data.get(i));
     			}
+    		}
+    	}
+    	return result;
+    }
+
+    
+    public YearMonth findMostRepeatedValue(ArrayList<YearMonth> list)
+    {
+    	if(list==null) return null;
+    	
+    	Map<YearMonth, Integer> frequencyMap = new HashMap<>();
+    	
+    	for(YearMonth value : list)
+    	{
+    		frequencyMap.put(value, frequencyMap.getOrDefault(value, 0) + 1);
+    	}
+    	
+    	int maxFrequency = 0;
+    	YearMonth mostRepeatedValue = null;
+    	
+    	Set<Map.Entry<YearMonth, Integer>> entrySet = frequencyMap.entrySet();
+    	for(Map.Entry<YearMonth, Integer> entry : entrySet)
+    	{
+    		if(entry.getValue() > maxFrequency)
+    		{
+    			maxFrequency = entry.getValue();
+    			mostRepeatedValue = entry.getKey();
+    		}
+    	}
+    	
+    	return mostRepeatedValue;
+    }
+
+    
+    public AnalysisResponse getAnalysis(String author)
+    {
+    	AnalysisResponse result = new AnalysisResponse();
+    	YearMonth mostMonth = getMostMonth(Long.parseLong(author));
+    	Diary popular = searchPopular(Long.parseLong(author));
+    	result.setNums(getCount(Long.parseLong(author)));
+    	result.setMostWritten(getMost(Long.parseLong(author)));
+    	result.setFirstDate(getFirst(Long.parseLong(author)));
+    	result.setMostYear(mostMonth.getYear());
+    	result.setMostMonth(mostMonth.getMonthValue());
+    	result.setMostNums(getMostMonthDiaries(mostMonth, Long.parseLong(author)));
+    	result.setMostViewed(popular.getId());
+    	result.setMostViewedEmpathy(popular.getEmpathy());
+    	result.setMostViewedComments(getCommentsNums(popular));
+    	return result;
+    }
+    
+    public YearMonth getMostMonth(Long user_id)
+    {
+    	ArrayList<YearMonth> ym = new ArrayList<YearMonth>();
+    	List<Diary> data = diaryRepository.findByUserId(user_id);
+    	int i;
+    	for(i=0; i<data.size(); i++)
+    	{
+    		YearMonth buffer = YearMonth.from(data.get(i).getCreatedAt());
+    		ym.add(buffer);
+    	}
+    	YearMonth result = findMostRepeatedValue(ym);
+    	return result;
+    }    
+    
+    public Integer getMostMonthDiaries(YearMonth date, Long user_id)
+    {
+    	List<Diary> data = diaryRepository.findByUserId(user_id);
+    	int i, result = 0;
+    	for(i=0; i<data.size(); i++)
+    	{
+    		if(YearMonth.from(data.get(i).getCreatedAt()) == date )
+    		{
+    			result++;
     		}
     	}
     	return result;
