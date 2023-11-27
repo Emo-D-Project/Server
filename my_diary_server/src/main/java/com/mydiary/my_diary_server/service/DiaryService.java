@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -333,8 +334,7 @@ public class DiaryService {
     	result.setNums(getCount(Long.parseLong(author)));
     	result.setMostWritten(getMost(Long.parseLong(author)));
     	result.setFirstDate(getFirst(Long.parseLong(author)));
-    	result.setMostYear(mostMonth.getYear());
-    	result.setMostMonth(mostMonth.getMonthValue());
+    	result.setMostYearMonth(LocalDate.of(mostMonth.getYear(), mostMonth.getMonthValue(), 1));
     	result.setMostNums(getMostMonthDiaries(mostMonth, Long.parseLong(author)));
     	result.setMostViewed(popular.getId());
     	result.setMostViewedEmpathy(popular.getEmpathy());
