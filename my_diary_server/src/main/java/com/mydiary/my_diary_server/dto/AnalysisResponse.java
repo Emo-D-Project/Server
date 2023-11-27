@@ -1,5 +1,6 @@
 package com.mydiary.my_diary_server.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -11,8 +12,7 @@ public class AnalysisResponse {
 	Integer nums;
 	String mostWritten;
 	LocalDateTime firstDate;
-	Integer mostYear;
-	Integer mostMonth;
+	LocalDate mostYearMonth;
 	Integer mostNums;
 	Long mostViewed;
 	Integer mostViewedEmpathy;
