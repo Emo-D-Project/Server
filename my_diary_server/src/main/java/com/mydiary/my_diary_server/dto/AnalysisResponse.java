@@ -11,6 +11,7 @@ import lombok.Setter;
 public class AnalysisResponse {
 	Integer nums;
 	String mostWritten;
+	Double[] emotions;
 	LocalDateTime firstDate;
 	LocalDate mostYearMonth;
 	Integer mostNums;

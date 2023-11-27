@@ -325,6 +325,30 @@ public class DiaryService {
     	return mostRepeatedValue;
     }
 
+    public Double[] getEmotionsAll(String author)
+    {
+    	Double[] emotions = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    	List<Diary> list = diaryRepository.findByUserId(Long.parseLong(author));
+    	int i;
+    	for(i=0; i<list.size(); i++)
+    	{
+    		if(list.get(i).getEmotion().equals("smile"))
+    			emotions[0]++;
+    		else if(list.get(i).getEmotion().equals("flutter"))
+    			emotions[1]++;
+    		else if(list.get(i).getEmotion().equals("angry"))
+    			emotions[2]++;
+    		else if(list.get(i).getEmotion().equals("annoying"))
+    			emotions[3]++;
+    		else if(list.get(i).getEmotion().equals("tired"))
+    			emotions[4]++;
+    		else if(list.get(i).getEmotion().equals("sad"))
+    			emotions[5]++;
+    		else if(list.get(i).getEmotion().equals("calmness"))
+    			emotions[6]++;
+    	}
+    	return emotions;
+    }
     
     public AnalysisResponse getAnalysis(String author)
     {
@@ -332,6 +356,7 @@ public class DiaryService {
     	YearMonth mostMonth = getMostMonth(Long.parseLong(author));
     	Diary popular = searchPopular(Long.parseLong(author));
     	result.setNums(getCount(Long.parseLong(author)));
+    	result.setEmotions(getEmotionsAll(author));
     	result.setMostWritten(getMost(Long.parseLong(author)));
     	result.setFirstDate(getFirst(Long.parseLong(author)));
     	result.setMostYearMonth(LocalDate.of(mostMonth.getYear(), mostMonth.getMonthValue(), 1));
