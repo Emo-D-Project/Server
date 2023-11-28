@@ -29,22 +29,31 @@ public class DiaryApiController {
 
     private final DiaryService diaryService;
     
-    @PostMapping(value="create", consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    /*
+    @GetMapping("filecheck")
+    public ResponseEntity<String> view()
+    {
+    		Files file = diaryService.view();
+    		
+            return file.getId()
+    }
+    */
+ 
+    /*
+    @PostMapping(value="upload", consumes= {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void upload(@RequestPart MultipartFile imageFile) throws IOException
+    {
+    	String imageByte = new String(imageFile.getBytes());
+    	diaryService.upload(imageByte);
+    }
+    */
+    
+    @PostMapping("create")
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
-    (@RequestPart AddDiaryRequest request,  @RequestPart MultipartFile imageFile, Principal principal) throws NumberFormatException, IOException {
-    	
-    	byte[] imageByte;
-    	
-    	if(imageFile != null)
-    	{
-    		imageByte = imageFile.getBytes();
-    	}
-    	else
-    		imageByte = null;
-    	
-    	
-    	Diary savedDiary = diaryService.save(request, imageByte, principal.getName());
+    (@RequestBody AddDiaryRequest request, Principal principal) {
+    
+    	Diary savedDiary = diaryService.save(request, principal.getName());
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
