@@ -1,5 +1,6 @@
 package com.mydiary.my_diary_server.domain;
 
+import com.google.firebase.messaging.Notification;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,7 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "sent_at")
     private LocalDateTime sentAt;
+
 
 
 }
