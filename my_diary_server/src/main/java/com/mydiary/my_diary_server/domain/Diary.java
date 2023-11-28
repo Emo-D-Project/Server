@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,11 +42,16 @@ public class Diary {
     public LocalDateTime updatedAt;
     
     @Lob
-    @Column(name = "file_data")
-    private byte[] fileData;
+    @Column(name = "image_data")
+    private byte[] imageData;
+    
+    @Lob
+    @Column(name = "audio_data")
+    private byte[] audioData;
     
     @Builder
-    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm, byte[] fileData){
+    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm, byte[] imageData,
+    		byte[] audioData){
     	this.userId = user_id;
     	this.author = Long.toString(user_id);
     	this.empathy = 0;
@@ -54,7 +60,8 @@ public class Diary {
     	this.is_comm = is_share;
     	this.is_share = is_comm;
     	this.CreatedAt = LocalDateTime.now();
-    	this.fileData = fileData;
+    	this.imageData = imageData;
+    	this.audioData = audioData;
     }
 
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {

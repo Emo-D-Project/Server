@@ -11,14 +11,14 @@ import com.mydiary.my_diary_server.repository.LikesRepository;
 import com.mydiary.my_diary_server.repository.ReportRepository;
 
 import org.springframework.stereotype.Service;
-
-
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -37,8 +37,9 @@ public class DiaryService {
     private final CommentRepository commentsRepository;
     private final ReportRepository reportRepository;
     
-    public Diary save(AddDiaryRequest req, String author) {
-        return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm(), null));
+    public Diary save(AddDiaryRequest req, byte[] imageFile, String author) throws NumberFormatException, IOException {
+    	return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm(),
+            		imageFile, null));
     }
 
     
