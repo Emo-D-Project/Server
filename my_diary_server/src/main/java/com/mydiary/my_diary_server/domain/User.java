@@ -35,9 +35,11 @@ public class User implements UserDetails {
     private String email;
 
 
-
     @Enumerated(value = EnumType.STRING)
     private OAuthType oauth;
+
+    @Column(nullable = true)
+    private String firebaseToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -70,5 +72,14 @@ public class User implements UserDetails {
 
         return this;
     }
+
+    public User update(String username, String firebaseToken) {
+        this.username = username;
+        this.firebaseToken = firebaseToken;
+
+        return this;
+    }
+
+
 
 }
