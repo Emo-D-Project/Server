@@ -41,17 +41,8 @@ public class Diary {
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
     
-    @Lob
-    @Column(name = "image_data")
-    private byte[] imageData;
-    
-    @Lob
-    @Column(name = "audio_data")
-    private byte[] audioData;
-    
     @Builder
-    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm, byte[] imageData,
-    		byte[] audioData){
+    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
     	this.userId = user_id;
     	this.author = Long.toString(user_id);
     	this.empathy = 0;
@@ -60,8 +51,6 @@ public class Diary {
     	this.is_comm = is_share;
     	this.is_share = is_comm;
     	this.CreatedAt = LocalDateTime.now();
-    	this.imageData = imageData;
-    	this.audioData = audioData;
     }
 
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {

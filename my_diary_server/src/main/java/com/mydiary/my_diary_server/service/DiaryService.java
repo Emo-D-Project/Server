@@ -2,11 +2,13 @@ package com.mydiary.my_diary_server.service;
 
 import com.mydiary.my_diary_server.domain.Comment;
 import com.mydiary.my_diary_server.domain.Diary;
+import com.mydiary.my_diary_server.domain.Files;
 import com.mydiary.my_diary_server.domain.Likes;
 import com.mydiary.my_diary_server.domain.Report;
 import com.mydiary.my_diary_server.dto.*;
 import com.mydiary.my_diary_server.repository.CommentRepository;
 import com.mydiary.my_diary_server.repository.DiaryRepository;
+import com.mydiary.my_diary_server.repository.FilesRepository;
 import com.mydiary.my_diary_server.repository.LikesRepository;
 import com.mydiary.my_diary_server.repository.ReportRepository;
 
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -36,12 +39,27 @@ public class DiaryService {
     private final LikesRepository likesRepository;
     private final CommentRepository commentsRepository;
     private final ReportRepository reportRepository;
+    private final FilesRepository filesRepository;
     
-    public Diary save(AddDiaryRequest req, byte[] imageFile, String author) throws NumberFormatException, IOException {
-    	return diaryRepository.save(new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm(),
-            		imageFile, null));
+    public Diary save(AddDiaryRequest req, String author) 
+    {
+    	return diaryRepository
+    			.save(
+    					new Diary(
+    							Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm()
+    			));
+    }
+    
+    public Files view()
+    {
+    	return filesRepository.findById((long) 1).
+    			 orElseThrow(() -> new IllegalArgumentException("not found : " + 1));
     }
 
+    public void upload(String imageByte)
+    {
+    	filesRepository.save(new Files(imageByte));
+    }
     
     public List<Diary> findAll() {
         return diaryRepository.findAll();
