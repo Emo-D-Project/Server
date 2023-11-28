@@ -1,4 +1,5 @@
 package com.mydiary.my_diary_server.controller;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mydiary.my_diary_server.domain.*;
 import com.mydiary.my_diary_server.dto.AddDiaryRequest;
 import com.mydiary.my_diary_server.dto.*;
@@ -6,12 +7,18 @@ import com.mydiary.my_diary_server.dto.UpdateDiaryRequest;
 import com.mydiary.my_diary_server.service.DiaryService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,24 +28,28 @@ import java.util.List;
 public class DiaryApiController {
 
     private final DiaryService diaryService;
-
-   
-    @PostMapping("/create")
-   @Operation(summary="일기 등록")
+    
+    @PostMapping(value="create", consumes= {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
-    (@RequestBody AddDiaryRequest request, Principal principal) {
-    	Diary savedDiary = diaryService.save(request, principal.getName());
+    (@RequestPart AddDiaryRequest request,  @RequestPart MultipartFile imageFile, Principal principal) throws NumberFormatException, IOException {
+    	
+    	byte[] imageByte;
+    	
+    	if(imageFile != null)
+    	{
+    		imageByte = imageFile.getBytes();
+    	}
+    	else
+    		imageByte = null;
+    	
+    	
+    	Diary savedDiary = diaryService.save(request, imageByte, principal.getName());
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
     }
     
-    @PostMapping("/upload")
-    public void uploadFile(@RequestParam("file") MultipartFile file)
-    {
-    	
-    }
-
     @GetMapping("/read")
     @Operation(summary="일기 전체 읽기")
     public ResponseEntity<List<DiaryResponse>> findAlldiaries() {
@@ -114,5 +125,4 @@ public class DiaryApiController {
     //88888991010111111
   
 }
-
 
