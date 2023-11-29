@@ -32,16 +32,23 @@ public class DiaryApiController {
     @PostMapping(value = "create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
+            (@RequestPart AddDiaryRequest request, @RequestPart List<MultipartFile> imageFile,
+    		@RequestPart MultipartFile audioFile,
+    		Principal principal) throws IOException {
+    
+        Diary savedDiary = diaryService.save(request, imageFile, audioFile, principal.getName());
 
-    (@RequestPart AddDiaryRequest request, @RequestPart MultipartFile audio, Principal principal) throws IOException {
-   
-    	if(audio!=null)
+    	if(imageFile != null)
     	{
-    		System.out.println(audio.getOriginalFilename());
+    		int i;
+    		System.out.println("이미지 개수" + imageFile.size());
+    		for(i=0; i<imageFile.size(); i++)
+    			System.out.println(imageFile.get(i).getOriginalFilename());
     	}
-
-    	Diary savedDiary = diaryService.save(request,audio, principal.getName());
-    	
+    	if(audioFile != null)
+    	{
+    		System.out.println(audioFile.getOriginalFilename());
+    	}
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
