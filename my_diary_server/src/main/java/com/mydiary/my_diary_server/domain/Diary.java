@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -30,13 +31,6 @@ public class Diary {
     private String emotion;
     private Boolean is_comm;
     private Boolean is_share;
-
-    @Column
-    private String audio; // 저장된 audio의 url
-
-    @ElementCollection
-    @Column(name = "images", length = 3) // 최대 3장의 이미지를 저장할 수 있도록 길이 지정
-    private List<String> images;
 
     @Column(name = "user_id")
     private Long userId;
@@ -78,16 +72,5 @@ public class Diary {
     		this.empathy -= 1;
     }
 
-    public void addImage(String imageData) {
-        if (images == null) {
-            images = new ArrayList<>();
-        }
-        if (images.size() < 3) {
-            images.add(imageData);
-        } else {
-            // 이미지가 최대 3장을 초과하면 예외 처리 또는 추가 로직을 수행할 수 있습니다.
-            throw new RuntimeException("최대 3장의 이미지를 초과했습니다.");
-        }
-    }
 }
 
