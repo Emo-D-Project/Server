@@ -1,6 +1,7 @@
 package com.mydiary.my_diary_server.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,8 @@ public class AddDiaryRequest {
     private String emotion;
     private Boolean is_share;
     private Boolean is_comm;
+    private List<MultipartFile> imageList;
+    private MultipartFile audio;
     
     public Diary toEntity(Diary diary) {
         return Diary.builder()

@@ -51,7 +51,7 @@ public class DiaryApiController {
     @PostMapping("create")
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
-    (@RequestBody AddDiaryRequest request, Principal principal) {
+    (@RequestBody AddDiaryRequest request, Principal principal) throws IOException {
     
     	Diary savedDiary = diaryService.save(request, principal.getName());
     	
