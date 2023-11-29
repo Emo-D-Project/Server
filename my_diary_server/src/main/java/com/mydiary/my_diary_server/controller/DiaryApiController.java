@@ -28,32 +28,20 @@ import java.util.List;
 public class DiaryApiController {
 
     private final DiaryService diaryService;
-    
-    /*
-    @GetMapping("filecheck")
-    public ResponseEntity<String> view()
-    {
-    		Files file = diaryService.view();
-    		
-            return file.getId()
-    }
-    */
- 
-    /*
-    @PostMapping(value="upload", consumes= {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void upload(@RequestPart MultipartFile imageFile) throws IOException
-    {
-    	String imageByte = new String(imageFile.getBytes());
-    	diaryService.upload(imageByte);
-    }
-    */
-    
-    @PostMapping("create")
+       
+    @PostMapping(value = "create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
-    (AddDiaryRequest request, Principal principal) throws IOException {
-    
-    	Diary savedDiary = diaryService.save(request, principal.getName());
+
+    (@RequestPart AddDiaryRequest request, @RequestPart MultipartFile audio, Principal principal) throws IOException {
+   
+    	if(audio!=null)
+    	{
+    		System.out.println(audio.getOriginalFilename());
+    	}
+
+    	Diary savedDiary = diaryService.save(request,audio, principal.getName());
+    	
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
