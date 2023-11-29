@@ -49,7 +49,7 @@ public class DiaryService {
 		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
 
 		//클라우드에 이미지 업로드
-		if(!req.getAudio().equals("")){
+		if(!req.getAudio().isEmpty()){
 			String uuidAudio = UUID.randomUUID().toString();
 
 			String ext = req.getAudio().getContentType();
@@ -90,7 +90,7 @@ public class DiaryService {
 
 		return diaryRepository.save(diary);
     }
-    
+
     public Files view()
     {
     	return filesRepository.findById((long) 1).
