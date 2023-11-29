@@ -55,12 +55,9 @@ public class UserController {
     private final UserService userService;
     @Value("${kakao.key}")
     private String kakaoKey;
-
-
-
+    
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
-
 
     // 카카오 로그인
     @Operation (summary = "헤더에 kakaoAccessToken 을 넣어서 보내면 서버의 JWT 토큰 발급 ")
@@ -72,7 +69,6 @@ public class UserController {
         KakaoUserInfoDto userInfo = joinKakaoUser(getKakaoUserInfo(token));
         return ResponseEntity.ok(userInfo);
     }
-
 
     // 사용자 가입시켜주기
     KakaoUserInfoDto joinKakaoUser(KakaoUserInfoDto kakaoUserInfo) {

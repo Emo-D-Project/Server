@@ -45,7 +45,7 @@ public class DiaryService {
 
 	@Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
 	private String bucketName;
-    public Diary save(AddDiaryRequest req, MultipartFile audio, String author) throws IOException {
+    public Diary save(AddDiaryRequest req, List<MultipartFile> imageFile, MultipartFile audio, String author) throws IOException {
 		// 이미지와 오디오 처리하는 부분
 		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
 		List<String> uuidImageList = new ArrayList<>();
@@ -67,9 +67,9 @@ public class DiaryService {
 
 		}
 
-		if(!req.getImageList().isEmpty()){
+		if(!imageFile.isEmpty()){
 
-			for (MultipartFile file : req.getImageList()) {
+			for (MultipartFile file : imageFile) {
 				String ext = file.getContentType();
 				String uuid = UUID.randomUUID().toString();
 
