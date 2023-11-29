@@ -15,7 +15,7 @@ public class UserInfo {
 
     @OneToOne
     @JoinColumn(name = "userr_id")
-    private User user;
+    private User userId;
 
     @Column
     private String title;

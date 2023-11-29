@@ -215,6 +215,15 @@ public class DiaryService {
     	return popular;
     }
     
+    public Integer checkLike(String author, Long id)
+    {
+    	Likes like = likesRepository.findByUserIdAndPostId(Long.parseLong(author), id);
+    	if(like != null)
+    		return 1;
+    	else
+    		return 0;
+    }
+    
     public ReportDTO createReport(String author, String comment)
     {
     	ReportDTO report = new ReportDTO();

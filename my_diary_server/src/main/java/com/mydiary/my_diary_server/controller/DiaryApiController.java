@@ -122,7 +122,13 @@ public class DiaryApiController {
     	LikesDTO like = new LikesDTO(id, Long.parseLong(principal.getName()));
     	diaryService.recommend(like);
     }
-
+    
+    @GetMapping("/recommend/{id}")
+    @Operation(summary="공감확인")
+    public Integer recommendCheck(@PathVariable long id, Principal principal)
+    {
+    	return diaryService.checkLike(principal.getName(), id);
+    }
 
   
 }
