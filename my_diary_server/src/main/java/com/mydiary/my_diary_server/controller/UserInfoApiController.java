@@ -1,3 +1,4 @@
+/*
 package com.mydiary.my_diary_server.controller;
 
 import com.mydiary.my_diary_server.dto.SetUserInfoRequest;
@@ -38,3 +39,4 @@ public class UserInfoApiController {
                 .body(userInfoResponse);
     }
 }
+*/
