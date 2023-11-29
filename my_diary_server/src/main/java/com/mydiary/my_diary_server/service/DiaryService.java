@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
@@ -46,15 +45,16 @@ public class DiaryService {
 
 	@Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
 	private String bucketName;
-    public Diary save(AddDiaryRequest req, String author) throws IOException {
+    public Diary save(AddDiaryRequest req, MultipartFile audio, String author) throws IOException {
 		// 이미지와 오디오 처리하는 부분
 		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
+		List<String> uuidImageList = new ArrayList<>();
 
 		//클라우드에 이미지 업로드
-		if(!req.getAudio().isEmpty()){
+		if(!audio.isEmpty()){
 			String uuidAudio = UUID.randomUUID().toString();
 
-			String ext = req.getAudio().getContentType();
+			String ext = audio.getContentType();
 
 			BlobInfo blobInfo = storage.create(
 					BlobInfo.newBuilder(bucketName, uuidAudio)
@@ -63,11 +63,11 @@ public class DiaryService {
 					req.getAudio().getInputStream()
 			);
 
-			diary.setAudio(uuidAudio);
+			log.info("저장할 diary의 audio url: " +  uuidAudio);
+
 		}
 
 		if(!req.getImageList().isEmpty()){
-			List<String> uuidImageList = new ArrayList<>();
 
 			for (MultipartFile file : req.getImageList()) {
 				String ext = file.getContentType();
@@ -80,15 +80,9 @@ public class DiaryService {
 						file.getInputStream()
 				);
 
-				uuidImageList.add(uuid);
+				log.info("저장할 diary의 image url: " + uuid);
 			}
-			diary.setImages(uuidImageList);
 		}
-		log.info("저장할 diary의 audio url: " + diary.getAudio());
-		for (String image : diary.getImages()) {
-			log.info("저장할 diary의 image url: " + image);
-		};
-
 
 		return diaryRepository.save(diary);
     }
