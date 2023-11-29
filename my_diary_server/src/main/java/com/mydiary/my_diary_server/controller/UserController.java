@@ -55,7 +55,7 @@ public class UserController {
     private final UserService userService;
     @Value("${kakao.key}")
     private String kakaoKey;
-    
+
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
 

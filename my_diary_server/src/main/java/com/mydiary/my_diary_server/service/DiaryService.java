@@ -60,7 +60,7 @@ public class DiaryService {
 					BlobInfo.newBuilder(bucketName, uuidAudio)
 							.setContentType(ext)
 							.build(),
-					req.getAudio().getInputStream()
+					audio.getInputStream()
 			);
 
 			log.info("저장할 diary의 audio url: " +  uuidAudio);
