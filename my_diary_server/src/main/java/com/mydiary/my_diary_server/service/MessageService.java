@@ -99,4 +99,11 @@ public class MessageService {
         // Map의 값들을 List로 반환
         return new ArrayList<>(chatRoomsMap.values());
     }
+
+    public void deleteAllMessagesByUserId(Long userId) {
+        // 사용자의 id와 관련된 메시지를 찾아 삭제
+        List<Message> userMessages = messageRepository.findByReceiverIdOrSenderId(userId, userId);
+
+        messageRepository.deleteAll(userMessages);
+    }
 }

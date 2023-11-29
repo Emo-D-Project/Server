@@ -1,5 +1,7 @@
 package com.mydiary.my_diary_server.service;
 
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
 import com.mydiary.my_diary_server.domain.Comment;
 import com.mydiary.my_diary_server.domain.Diary;
 import com.mydiary.my_diary_server.domain.Files;
@@ -12,6 +14,8 @@ import com.mydiary.my_diary_server.repository.FilesRepository;
 import com.mydiary.my_diary_server.repository.LikesRepository;
 import com.mydiary.my_diary_server.repository.ReportRepository;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,15 +29,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class DiaryService {
@@ -43,14 +42,55 @@ public class DiaryService {
     private final CommentRepository commentsRepository;
     private final ReportRepository reportRepository;
     private final FilesRepository filesRepository;
-    
-    public Diary save(AddDiaryRequest req, String author) 
-    {
-    	return diaryRepository
-    			.save(
-    					new Diary(
-    							Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm()
-    			));
+	private final Storage storage;
+
+	@Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
+	private String bucketName;
+    public Diary save(AddDiaryRequest req, String author) throws IOException {
+		// 이미지와 오디오 처리하는 부분
+		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
+
+		//클라우드에 이미지 업로드
+		if(!req.getAudio().equals("")){
+			String uuidAudio = UUID.randomUUID().toString();
+
+			String ext = req.getAudio().getContentType();
+
+			BlobInfo blobInfo = storage.create(
+					BlobInfo.newBuilder(bucketName, uuidAudio)
+							.setContentType(ext)
+							.build(),
+					req.getAudio().getInputStream()
+			);
+
+			diary.setAudio(uuidAudio);
+		}
+
+		if(!req.getImageList().isEmpty()){
+			List<String> uuidImageList = new ArrayList<>();
+
+			for (MultipartFile file : req.getImageList()) {
+				String ext = file.getContentType();
+				String uuid = UUID.randomUUID().toString();
+
+				BlobInfo blobInfo = storage.create(
+						BlobInfo.newBuilder(bucketName, uuid)
+								.setContentType(ext)
+								.build(),
+						file.getInputStream()
+				);
+
+				uuidImageList.add(uuid);
+			}
+			diary.setImages(uuidImageList);
+		}
+		log.info("저장할 diary의 audio url: " + diary.getAudio());
+		for (String image : diary.getImages()) {
+			log.info("저장할 diary의 image url: " + image);
+		};
+
+
+		return diaryRepository.save(diary);
     }
     
     public Files view()

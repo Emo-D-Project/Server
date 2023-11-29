@@ -35,8 +35,8 @@ public class DiaryApiController {
     (@RequestPart AddDiaryRequest request, @RequestPart List<MultipartFile> imageFile,
     		@RequestPart MultipartFile audioFile,
     		Principal principal) {
-   
-    	Diary savedDiary = diaryService.save(request, principal.getName());
+    
+    		Diary savedDiary = diaryService.save(request, principal.getName());
     	
     	if(imageFile != null)
     	{
@@ -123,10 +123,7 @@ public class DiaryApiController {
     	diaryService.recommend(like);
     }
 
-    // 주석추가
-    // 하나 더 추가
-    // 또11111111144444222222222333366661111122223333344444555555555666777777
-    //88888991010111111
+
   
 }
 
