@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.*;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -200,8 +202,7 @@ public class DiaryService {
     	
     }
     */
-    
-    //
+      
     public Diary searchPopular(Long user_id)
     {
     	List<Diary> list = diaryRepository.findByUserId(user_id);
@@ -329,14 +330,18 @@ public class DiaryService {
     } 
 
     
-    public List<CalendarResponse> getCalendar(long userId)
+    public List<CalendarResponse> getCalendar(Long userId)
     {
     	List<Diary> diaries = diaryRepository.findByUserId(userId);
-
-		List<CalendarResponse> responses = diaries.stream().map(CalendarResponse::new).toList();
-
+    	int i;
+    	for(i=0; i<diaries.size(); i++)
+    	{
+    		System.out.println(diaries.get(i).getEmotion());
+    	}
+		List<CalendarResponse> responses = diaries.stream().map(CalendarResponse::new).toList();	
 		return responses;
     }
+   
     
     public List<Diary> findByMonth(LocalDateTime date, String author)
     {

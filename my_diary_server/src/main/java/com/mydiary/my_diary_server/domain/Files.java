@@ -30,7 +30,6 @@ public class Files {
     private Long id;
     
     @Lob
-	@Column
     private String image;
 
     @Builder
@@ -40,3 +39,4 @@ public class Files {
     }
     
 }
+
