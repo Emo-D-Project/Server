@@ -55,5 +55,14 @@ public class MessageApiController {
         return ResponseEntity.ok(chatRooms);
     }
 
+    @DeleteMapping("/deleteAll")
+    @Operation ( summary = "자신 쪽지 모두 삭제")
+    public ResponseEntity deleteAllMyMessage(Principal principal){
+        Long userId = Long.parseLong(principal.getName());
+        messageService.deleteAllMessagesByUserId(userId);
+        return ResponseEntity.ok("All messages deleted for user with ID: " + userId);
+
+    }
+
 
 }

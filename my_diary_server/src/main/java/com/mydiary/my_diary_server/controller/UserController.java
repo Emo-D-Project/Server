@@ -40,8 +40,8 @@ import java.time.Duration;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(30);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(14);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(60);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(60);
     @Autowired
     private TokenProvider tokenProvider;
     @Autowired
