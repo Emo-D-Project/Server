@@ -31,7 +31,6 @@ public class CalendarController {
 	public ResponseEntity<Map<String, String>> getCalender(Principal principal) {
 		// 다이어리 정보 받아오기 (date, emotion)
 		List<CalendarResponse> calendarResponses = diaryService.getCalendar(Long.parseLong(principal.getName()));
-
 		// List<CalendarResponse>를 Map<Date, String>으로 직접 변환
 		Map<String, String> response = new HashMap<>();
 		for (CalendarResponse calendarResponse : calendarResponses) {
