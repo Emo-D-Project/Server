@@ -25,8 +25,7 @@ public class UserInfoService {
 
 
     public List<UserInfoResponse> findAllById(Long id){
-        List<UserInfo> userInfos = userInfoRepository.findAllByUserId(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
+        List<UserInfo> userInfos = userInfoRepository.findAllByUserId(id);
 
         List<UserInfoResponse> userInfoResponses = new ArrayList<>();
         for (UserInfo userInfo : userInfos) {
@@ -39,8 +38,7 @@ public class UserInfoService {
 
     @Transactional
     public UserInfoResponse saveOrUpdate(UserInfo userInfo, Long userId) {
-        List<UserInfo> userInfos = userInfoRepository.findAllByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + userId));
+        List<UserInfo> userInfos = userInfoRepository.findAllByUserId(userId);
         boolean check = false;
         for (UserInfo userInfo1 : userInfos) {
             if(userInfo.equals(userInfo1)){
