@@ -14,7 +14,7 @@ public class UserInfo {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userr_id")
+    @JoinColumn(name = "user_id")
     private User userId;
 
     @Column
