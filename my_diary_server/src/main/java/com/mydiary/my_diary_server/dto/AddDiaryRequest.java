@@ -18,8 +18,6 @@ public class AddDiaryRequest {
     private String emotion;
     private Boolean is_share;
     private Boolean is_comm;
-    private List<MultipartFile> imageList;
-    private MultipartFile audio;
     
     public Diary toEntity(Diary diary) {
         return Diary.builder()
