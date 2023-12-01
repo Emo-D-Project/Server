@@ -37,4 +37,15 @@ public class UserInfoApiController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userInfoResponse);
     }
+
+    @Operation (summary = "아이디로 마이페이지에 등록한 정보들 불러오는 기능")
+    @GetMapping("/{id}")
+    public ResponseEntity<List<UserInfoResponse>> findUserInfoById(@PathVariable Long otherUserId){
+        List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(otherUserId);
+
+        return ResponseEntity.ok()
+                .body(userInfoResponse);
+    }
+
+
 }
