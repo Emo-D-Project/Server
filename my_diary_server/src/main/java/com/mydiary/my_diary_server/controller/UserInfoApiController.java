@@ -53,7 +53,7 @@ public class UserInfoApiController {
     }
 
     @Operation (summary = "아이디로 마이페이지에 등록한 자기 소개 정보를 불러오는 기능")
-    @GetMapping("{userId}")
+    @GetMapping("description/{userId}")
     public ResponseEntity<String> findDescriptionById(Long userId){
         List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(userId);
 
