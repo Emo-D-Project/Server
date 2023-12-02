@@ -183,6 +183,7 @@ public class DiaryService {
     		return 0;
     }
     
+    
     public ReportDTO createReport(String author, String comment)
     {
     	ReportDTO report = new ReportDTO();
