@@ -71,7 +71,7 @@ public class DiaryService {
 			
 		}
 
-		if(!imageFile.isEmpty()){
+		if(!imageFile.get(0).isEmpty()){
 			int i;
 			for (i=0; i<imageFile.size(); i++) {
 				String ext = imageFile.get(i).getContentType();
@@ -229,6 +229,7 @@ public class DiaryService {
     	else
     		return 0;
     }
+    
     
     public ReportDTO createReport(String author, String comment)
     {
