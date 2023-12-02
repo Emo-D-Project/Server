@@ -1,5 +1,6 @@
 package com.mydiary.my_diary_server.controller;
 
+import com.mydiary.my_diary_server.domain.UserInfo;
 import com.mydiary.my_diary_server.dto.SetUserInfoRequest;
 import com.mydiary.my_diary_server.dto.UserInfoResponse;
 import com.mydiary.my_diary_server.service.UserInfoService;
@@ -38,10 +39,24 @@ public class UserInfoApiController {
                 .body(userInfoResponse);
     }
 
+    @Operation ( summary = "마이페이지에 자기 소개 정보 등록하는 기능")
+    @PostMapping("my/description")
+    public ResponseEntity<UserInfoResponse> setUserDescription(@RequestBody String description, Principal principal){
+        SetUserInfoRequest request = new SetUserInfoRequest();
+        request.setTitle("자기 소개");
+        request.setContent(description);
+
+        UserInfoResponse userInfoResponse = userInfoService.saveOrUpdate(request.toEnity(), Long.parseLong(principal.getName()));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userInfoResponse);
+    }
+
     @Operation (summary = "아이디로 마이페이지에 등록한 정보들 불러오는 기능")
     @GetMapping("/{userId}")
     public ResponseEntity<List<UserInfoResponse>> findUserInfoById(@PathVariable Long userId){
         List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(userId);
+
+        userInfoResponse.removeIf(response -> response.getTitle().equals("자기 소개"));
 
         return ResponseEntity.ok()
                 .body(userInfoResponse);
