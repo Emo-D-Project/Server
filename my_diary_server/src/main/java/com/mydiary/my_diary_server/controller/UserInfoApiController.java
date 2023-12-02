@@ -21,7 +21,7 @@ public class UserInfoApiController {
     @Autowired
     public UserInfoApiController(UserInfoService userInfoService){this.userInfoService = userInfoService;}
 
-    @Operation (summary = "마이페이지에 등록한 정보들 불러오는 기능")
+    @Operation (summary = "자신의 마이페이지에 등록한 정보들 불러오는 기능")
     @GetMapping()
     public ResponseEntity<List<UserInfoResponse>> findUserInfo(Principal principal){
         List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(Long.parseLong(principal.getName()));
@@ -39,9 +39,9 @@ public class UserInfoApiController {
     }
 
     @Operation (summary = "아이디로 마이페이지에 등록한 정보들 불러오는 기능")
-    @GetMapping("/{id}")
-    public ResponseEntity<List<UserInfoResponse>> findUserInfoById(@PathVariable Long otherUserId){
-        List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(otherUserId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<UserInfoResponse>> findUserInfoById(@PathVariable Long userId){
+        List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(userId);
 
         return ResponseEntity.ok()
                 .body(userInfoResponse);
