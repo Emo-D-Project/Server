@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/test2")
 public class TestController2 {
-    @GetMapping("/authorizationTest")
+    /*@GetMapping("/authorizationTest")
     public ResponseEntity<String> handleGetRequest(){
         return ResponseEntity.status(HttpStatus.OK).body("Good");
     }
@@ -18,6 +18,6 @@ public class TestController2 {
     @PostMapping()
     public ResponseEntity<String> handleDefaultRequest(@RequestBody String name) {
         return ResponseEntity.status(HttpStatus.OK).body(name);
-    }
+    }*/
 
 }
