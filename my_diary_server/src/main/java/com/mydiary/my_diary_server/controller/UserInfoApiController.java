@@ -1,6 +1,5 @@
 package com.mydiary.my_diary_server.controller;
 
-import com.mydiary.my_diary_server.domain.UserInfo;
 import com.mydiary.my_diary_server.dto.SetUserInfoRequest;
 import com.mydiary.my_diary_server.dto.UserInfoResponse;
 import com.mydiary.my_diary_server.service.UserInfoService;
@@ -39,25 +38,51 @@ public class UserInfoApiController {
                 .body(userInfoResponse);
     }
 
+    @Operation (summary = "자신의 마이페이지에 등록한 자기 소개 정보를 불러오는 기능")
+    @GetMapping("my")
+    public ResponseEntity<String> findMyDescription(Principal principal){
+        List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(Long.parseLong(principal.getName()));
+
+        for (UserInfoResponse response : userInfoResponse) {
+            if(response.getTitle().equals("자기 소개")){
+                return ResponseEntity.ok().body(response.getContent());
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @Operation (summary = "아이디로 마이페이지에 등록한 자기 소개 정보를 불러오는 기능")
+    @GetMapping("{userId}")
+    public ResponseEntity<String> findDescriptionById(Long userId){
+        List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(userId);
+
+        for (UserInfoResponse response : userInfoResponse) {
+            if(response.getTitle().equals("자기 소개")){
+                return ResponseEntity.ok().body(response.getContent());
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @Operation ( summary = "마이페이지에 자기 소개 정보 등록하는 기능")
     @PostMapping("my/description")
-    public ResponseEntity<UserInfoResponse> setUserDescription(@RequestBody String description, Principal principal){
+    public ResponseEntity<Void> setUserDescription(@RequestBody String description, Principal principal){
         SetUserInfoRequest request = new SetUserInfoRequest();
         request.setTitle("자기 소개");
         request.setContent(description);
 
         UserInfoResponse userInfoResponse = userInfoService.saveOrUpdate(request.toEnity(), Long.parseLong(principal.getName()));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userInfoResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation (summary = "아이디로 마이페이지에 등록한 정보들 불러오는 기능")
     @GetMapping("/{userId}")
     public ResponseEntity<List<UserInfoResponse>> findUserInfoById(@PathVariable Long userId){
         List<UserInfoResponse> userInfoResponse = userInfoService.findAllById(userId);
-
-        userInfoResponse.removeIf(response -> response.getTitle().equals("자기 소개"));
-
+        // 자기 소개 부분만 빼고 리턴할 수 있게 해주는 코드
+        // userInfoResponse.removeIf(response -> response.getTitle().equals("자기 소개"));
         return ResponseEntity.ok()
                 .body(userInfoResponse);
     }
