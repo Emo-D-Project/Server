@@ -18,7 +18,7 @@ public class DiaryResponse {
     private int empathy;
     private LocalDateTime createdAt;
     private String audio;
-    List<String> images = new ArrayList<>();
+    private List<String> images;
     
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
@@ -28,8 +28,6 @@ public class DiaryResponse {
         this.empathy = diary.getEmpathy();
         this.createdAt = diary.getCreatedAt();
         this.audio = diary.getAudio();
-        this.images.add(diary.getImage1());
-        this.images.add(diary.getImage2());
-        this.images.add(diary.getImage3());
+        this.images = diary.getImages();
     }
 }
