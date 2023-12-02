@@ -38,7 +38,7 @@ public class DiaryApiController {
     
         Diary savedDiary = diaryService.save(request, imageFile, audioFile, principal.getName());
 
-    	if(imageFile != null)
+    	if(imageFile.get(0) != null)
     	{
     		int i;
     		System.out.println("이미지 개수" + imageFile.size());
