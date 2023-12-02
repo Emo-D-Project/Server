@@ -48,14 +48,18 @@ public class DiaryService {
     public Diary save(AddDiaryRequest req, List<MultipartFile> imageFile, MultipartFile audio, String author) throws IOException {
 		// 이미지와 오디오 처리하는 부분
 		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
-		List<String> uuidImageList = new ArrayList<>();
 
+		String url = "https://storage.googleapis.com/emod_project/";
+		
 		//클라우드에 이미지 업로드
 		if(!audio.isEmpty()){
 			String uuidAudio = UUID.randomUUID().toString();
-
+			
 			String ext = audio.getContentType();
 
+			List<String > uuidImages = new ArrayList<String>();
+			
+			
 			BlobInfo blobInfo = storage.create(
 					BlobInfo.newBuilder(bucketName, uuidAudio)
 							.setContentType(ext)
@@ -63,25 +67,27 @@ public class DiaryService {
 					audio.getInputStream()
 			);
 
-			log.info("저장할 diary의 audio url: " +  uuidAudio);
-
+			diary.setAudio(url + uuidAudio);
+			
 		}
 
 		if(!imageFile.isEmpty()){
-
-			for (MultipartFile file : imageFile) {
-				String ext = file.getContentType();
+			int i;
+			for (i=0; i<imageFile.size(); i++) {
+				String ext = imageFile.get(i).getContentType();
 				String uuid = UUID.randomUUID().toString();
 
 				BlobInfo blobInfo = storage.create(
 						BlobInfo.newBuilder(bucketName, uuid)
 								.setContentType(ext)
 								.build(),
-						file.getInputStream()
+						imageFile.get(i).getInputStream()
 				);
 
-				log.info("저장할 diary의 image url: " + uuid);
-			}
+				if(i==0) diary.setImage1(url + uuid);
+				else if(i==1) diary.setImage2(url +uuid);
+				else if(i==2) diary.setImage3(url + uuid);
+							}
 		}
 
 		return diaryRepository.save(diary);

@@ -43,6 +43,11 @@ public class Diary {
     @LastModifiedDate
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
+
+    private String audio;
+    private String image1;
+    private String image2;
+    private String image3;
     
     @Builder
     public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){

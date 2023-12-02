@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -15,6 +17,8 @@ public class DiaryResponse {
     private long id;
     private int empathy;
     private LocalDateTime createdAt;
+    private String audio;
+    List<String> images = new ArrayList<>();
     
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
@@ -23,5 +27,9 @@ public class DiaryResponse {
         this.id = diary.getId();
         this.empathy = diary.getEmpathy();
         this.createdAt = diary.getCreatedAt();
+        this.audio = diary.getAudio();
+        this.images.add(diary.getImage1());
+        this.images.add(diary.getImage2());
+        this.images.add(diary.getImage3());
     }
 }
