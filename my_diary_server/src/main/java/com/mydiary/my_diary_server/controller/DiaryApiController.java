@@ -42,9 +42,9 @@ public class DiaryApiController {
     @PostMapping(value = "create")
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary(
-            @RequestBody AddDiaryRequest request,
-            @RequestPart(required = false) List<MultipartFile> imageFiles,
-            @RequestPart(required = false) MultipartFile audioFile,
+            @ModelAttribute AddDiaryRequest request,
+            @RequestParam(required = false) List<MultipartFile> imageFiles,
+            @RequestParam(required = false) MultipartFile audioFile,
             Principal principal) throws IOException {
 
         Diary diary = new Diary(Long.parseLong(principal.getName()), request.getContent(), request.getEmotion(), request.getIs_share(), request.getIs_comm());
