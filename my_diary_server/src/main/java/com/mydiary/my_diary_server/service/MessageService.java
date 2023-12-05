@@ -7,6 +7,7 @@ import com.mydiary.my_diary_server.dto.AddMessageRequest;
 import com.mydiary.my_diary_server.dto.MessageResponse;
 import com.mydiary.my_diary_server.repository.MessageRepository;
 import com.mydiary.my_diary_server.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -63,6 +64,7 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
+    @Transactional
     public List<Message> findChats(Long otherUserId, Long userId) {
         List<Message> messages = messageRepository.findByReceiverIdAndSenderIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found find chats / id : " + userId + "otherUserId: " + otherUserId));

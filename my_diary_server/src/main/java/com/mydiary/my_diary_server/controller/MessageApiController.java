@@ -34,6 +34,9 @@ public class MessageApiController {
         // 자신의 메시지인지 확인해주는 코드
         for(MessageResponse messageResponse : messages){
             messageResponse.setMyMessage(messageResponse.getSenderId() == Long.parseLong(principal.getName()));
+            if(messageResponse.getReceiverId().equals(Long.parseLong(principal.getName()))){
+
+            }
         }
 
         return ResponseEntity.ok()
