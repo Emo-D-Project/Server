@@ -82,6 +82,7 @@ public class DiaryService {
     	return diaryRepository.findByUserId(user_id).get(0).getCreatedAt();
     }
     
+    //가장 많이 일기를 쓴 시간대
     public String getMost(Long user_id)
     {
     	int[] counts = {0, 0, 0, 0};
