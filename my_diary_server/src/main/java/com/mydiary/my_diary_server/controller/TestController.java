@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/test")
 public class TestController {
-    @GetMapping()
+   /* @GetMapping()
     public ResponseEntity<String> handleGetRequest(){
         return ResponseEntity.status(HttpStatus.OK).body("Good");
     }
@@ -20,7 +20,7 @@ public class TestController {
     @PutMapping()
     public ResponseEntity<String> handlePutRequest(@RequestBody String name) {
         return ResponseEntity.status(HttpStatus.OK).body(name);
-    }
+    }*/
 //    @PostMapping("/audioRecognition")
 //    public ResponseEntity<String> handleAudioRecognition(@RequestBody String audioUrl){
 //        return ResponseEntity.status(HttpStatus.OK).body(new SpeechRecongnitionService().run(audioUrl));

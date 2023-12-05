@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Principal;
 import java.time.Duration;
 
 
@@ -58,6 +59,12 @@ public class UserController {
 
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
+
+    @GetMapping()
+    @Operation(summary = "자신의 아이디를 가져오는 기능")
+    public ResponseEntity<Long> GetMyUserId(Principal principal){
+        return ResponseEntity.ok(Long.parseLong(principal.getName()));
+    }
 
     // 카카오 로그인
     @Operation (summary = "헤더에 kakaoAccessToken 을 넣어서 보내면 서버의 JWT 토큰 발급 ")
