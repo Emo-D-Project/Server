@@ -71,23 +71,27 @@ public class DiaryService {
 			
 		}
 
-		if(!imageFile.get(0).isEmpty()){
-			int i;
-			for (i=0; i<imageFile.size(); i++) {
-				String ext = imageFile.get(i).getContentType();
-				String uuid = UUID.randomUUID().toString();
+		if(imageFile != null)
+		{
+			if(!imageFile.get(0).isEmpty()){
+				int i;
+				for (i=0; i<imageFile.size(); i++) {
+					String ext = imageFile.get(i).getContentType();
+					String uuid = UUID.randomUUID().toString();
 
-				BlobInfo blobInfo = storage.create(
-						BlobInfo.newBuilder(bucketName, uuid)
-								.setContentType(ext)
-								.build(),
-						imageFile.get(i).getInputStream()
-				);
+					BlobInfo blobInfo = storage.create(
+							BlobInfo.newBuilder(bucketName, uuid)
+									.setContentType(ext)
+									.build(),
+							imageFile.get(i).getInputStream()
+					);
 
-				if(i==0) diary.setImage1(url + uuid);
-				else if(i==1) diary.setImage2(url +uuid);
-				else if(i==2) diary.setImage3(url + uuid);
-							}
+					if(i==0) diary.setImage1(url + uuid);
+					else if(i==1) diary.setImage2(url +uuid);
+					else if(i==2) diary.setImage3(url + uuid);
+								}
+			}
+
 		}
 
 		return diaryRepository.save(diary);

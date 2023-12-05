@@ -37,18 +37,6 @@ public class DiaryApiController {
     		Principal principal) throws IOException {
     
         Diary savedDiary = diaryService.save(request, imageFile, audioFile, principal.getName());
-
-    	if(imageFile.get(0) != null)
-    	{
-    		int i;
-    		System.out.println("이미지 개수" + imageFile.size());
-    		for(i=0; i<imageFile.size(); i++)
-    			System.out.println(imageFile.get(i).getOriginalFilename());
-    	}
-    	if(audioFile != null)
-    	{
-    		System.out.println(audioFile.getOriginalFilename());
-    	}
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
