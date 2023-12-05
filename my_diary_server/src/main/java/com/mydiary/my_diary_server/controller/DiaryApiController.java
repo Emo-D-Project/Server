@@ -32,7 +32,7 @@ public class DiaryApiController {
     @PostMapping(value = "create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
-            (@RequestPart AddDiaryRequest request, @RequestPart List<MultipartFile> imageFile,
+            (@RequestPart(required=false) AddDiaryRequest request, @RequestPart(required=false) List<MultipartFile> imageFile,
     		@RequestPart MultipartFile audioFile,
     		Principal principal) throws IOException {
     
