@@ -94,7 +94,11 @@ public class MessageService {
             chatRoom.setLastMessage(message.getContent());
             chatRoom.setLastMessageSentAt(message.getSentAt());
             chatRoom.setName(userRepository.findById(otherUserId).get().getUsername());
-            chatRoom.setRead(message.isRead());
+            if(message.getReceiverId()==userId && message.isRead()){
+                chatRoom.setRead(false);
+            }else{
+                chatRoom.setRead(true);
+            }
 
             chatRoomsMap.put(otherUserId, chatRoom);
         }
