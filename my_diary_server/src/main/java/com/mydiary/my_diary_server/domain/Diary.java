@@ -34,21 +34,21 @@ public class Diary {
 
     @Column(name = "user_id")
     private Long userId;
-
     private String author;
+    
     @CreatedDate
     @Column(name = "created_at")
     public LocalDateTime CreatedAt;
+
     @LastModifiedDate
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
-    @Column
-    private String audio;
-    @ElementCollection
-    @CollectionTable(name = "diary_images", joinColumns = @JoinColumn(name = "diary_id"))
-    @Column(name = "image")
-    private List<String> images;
 
+    private String audio;
+    private String image1;
+    private String image2;
+    private String image3;
+    
     @Builder
     public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
     	this.userId = user_id;
@@ -78,4 +78,3 @@ public class Diary {
     }
 
 }
-
