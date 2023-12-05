@@ -52,7 +52,7 @@ public class DiaryService {
 		String url = "https://storage.googleapis.com/emod_project/";
 		
 		//클라우드에 이미지 업로드
-		if(!audio.isEmpty()){
+		if(audio != null){//예외처리
 			String uuidAudio = UUID.randomUUID().toString();
 			
 			String ext = audio.getContentType();
@@ -71,9 +71,9 @@ public class DiaryService {
 			
 		}
 
-		if(imageFile != null)
+		if(imageFile != null)//null값처리
 		{
-			if(!imageFile.get(0).isEmpty()){
+			if(!imageFile.get(0).isEmpty()){//빈 리스트 예외처리
 				int i;
 				for (i=0; i<imageFile.size(); i++) {
 					String ext = imageFile.get(i).getContentType();
@@ -102,7 +102,8 @@ public class DiaryService {
     	return filesRepository.findById((long) 1).
     			 orElseThrow(() -> new IllegalArgumentException("not found : " + 1));
     }
-
+    
+    
     public void upload(String imageByte)
     {
     	filesRepository.save(new Files(imageByte));
