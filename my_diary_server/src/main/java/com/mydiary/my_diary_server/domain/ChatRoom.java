@@ -14,10 +14,12 @@ public class ChatRoom {
     private String name;
     private String lastMessage;
     private LocalDateTime lastMessageSentAt;
+    private boolean isRead;
 
-    public ChatRoom(Long otherUserId, String s) {
+    public ChatRoom(Long otherUserId, String s, boolean isRead) {
         this.otherUserId = otherUserId;
         this.lastMessage = s;
+        this.isRead = isRead;
     }
 
 

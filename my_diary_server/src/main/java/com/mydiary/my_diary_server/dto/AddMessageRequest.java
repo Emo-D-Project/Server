@@ -14,6 +14,5 @@ public class AddMessageRequest {
     private String content;
     private LocalDateTime sentAt;
     private Long receiverId;
-    private boolean isRead;
 
 }

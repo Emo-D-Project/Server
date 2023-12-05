@@ -85,13 +85,14 @@ public class MessageService {
 
             ChatRoom chatRoom = chatRoomsMap.get(otherUserId);
             if (chatRoom == null) {
-                chatRoom = new ChatRoom(otherUserId, "Room with User " + otherUserId);
+                chatRoom = new ChatRoom(otherUserId, "Room with User " + otherUserId, message.isRead());
             }
 
             // 마지막 메시지 업데이트
             chatRoom.setLastMessage(message.getContent());
             chatRoom.setLastMessageSentAt(message.getSentAt());
             chatRoom.setName(userRepository.findById(otherUserId).get().getUsername());
+            chatRoom.setRead(message.isRead());
 
             chatRoomsMap.put(otherUserId, chatRoom);
         }
