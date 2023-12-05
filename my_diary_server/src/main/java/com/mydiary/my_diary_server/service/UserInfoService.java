@@ -39,19 +39,15 @@ public class UserInfoService {
     public UserInfoResponse saveOrUpdate(UserInfo userInfo, Long userId) {
         List<UserInfo> userInfos = userInfoRepository.findAllByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + userId));
-        boolean check = false;
+
         for (UserInfo userInfo1 : userInfos) {
-            if(userInfo.equals(userInfo1)){
-                check = true;
+            if(userInfo.getTitle().equals(userInfo1.getTitle())){
+                userInfo1.setContent(userInfo.getContent());
+
+                return new UserInfoResponse(userInfo1);
             }
         }
 
-        if(check){
-            UserInfo userInfo1 = userInfoRepository.findByUserId(userId).get();
-            userInfo1.update(userInfo);
-
-            return new UserInfoResponse(userInfo1);
-        }
         if (userRepository.findById(userId).isPresent()) {
             userInfo.setUser(userRepository.findById(userId).get());
         }
