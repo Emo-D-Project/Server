@@ -67,7 +67,9 @@ public class MessageService {
         List<Message> messages = messageRepository.findByReceiverIdAndSenderIdOrReceiverIdAndSenderId(userId, otherUserId, otherUserId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found find chats / id : " + userId + "otherUserId: " + otherUserId));
         for (Message message : messages) {
-            message.setRead(true);
+            if(message.getReceiverId() == userId){
+                message.setRead(true);
+            }
         }
         
         return messages;
