@@ -20,6 +20,12 @@ public class FCMNotificationApiController {
 
     private final FCMNotificationService fcmNotificationService;
 
+    @Operation(summary = "CI/CD테스트용 코드")
+    @GetMapping()
+    public void cicd()
+    {
+    	
+    }
     
 
     @Operation(summary = "알림 보내기")
