@@ -28,7 +28,14 @@ import java.util.List;
 public class DiaryApiController {
 
     private final DiaryService diaryService;
-       
+      
+    @GetMapping(value="CICDTEST")
+    @Operation(summary="CI/CD테스트코드")
+    public void test()
+    {
+    	
+    }
+    
     @PostMapping(value = "create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary="일기 등록")
     public ResponseEntity<Diary> addDiary
