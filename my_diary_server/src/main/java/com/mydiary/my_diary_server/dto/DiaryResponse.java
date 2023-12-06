@@ -19,6 +19,8 @@ public class DiaryResponse {
     private LocalDateTime createdAt;
     private String audio;
     List<String> images = new ArrayList<>();
+    private boolean is_comm;
+    private boolean is_share;
     
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
@@ -31,5 +33,7 @@ public class DiaryResponse {
         this.images.add(diary.getImage1());
         this.images.add(diary.getImage2());
         this.images.add(diary.getImage3());
+        this.is_comm = diary.getIs_comm();
+        this.is_share = diary.getIs_share();
     }
 }
