@@ -41,8 +41,59 @@ public class DiaryService {
     private final CommentRepository commentsRepository;
     private final ReportRepository reportRepository;
     private final FilesRepository filesRepository;
+	private final Storage storage;
 
-    public Diary save(Diary diary){
+	@Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
+	private String bucketName;
+    public Diary save(AddDiaryRequest req, List<MultipartFile> imageFile, MultipartFile audio, String author) throws IOException {
+		// 이미지와 오디오 처리하는 부분
+		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
+
+		String url = "https://storage.googleapis.com/emod_project/";
+		
+		//클라우드에 이미지 업로드
+		if(audio != null){//예외처리
+			String uuidAudio = UUID.randomUUID().toString();
+			
+			String ext = audio.getContentType();
+
+			List<String > uuidImages = new ArrayList<String>();
+			
+			
+			BlobInfo blobInfo = storage.create(
+					BlobInfo.newBuilder(bucketName, uuidAudio)
+							.setContentType(ext)
+							.build(),
+					audio.getInputStream()
+			);
+
+			diary.setAudio(url + uuidAudio);
+			
+		}
+
+		if(imageFile != null)//null값처리
+		{
+			if(!imageFile.get(0).isEmpty()){//빈 리스트 예외처리
+				int i;
+				for (i=0; i<imageFile.size(); i++) {
+					String ext = imageFile.get(i).getContentType();
+					String uuid = UUID.randomUUID().toString();
+
+					BlobInfo blobInfo = storage.create(
+							BlobInfo.newBuilder(bucketName, uuid)
+									.setContentType(ext)
+									.build(),
+							imageFile.get(i).getInputStream()
+					);
+
+					if(i==0) diary.setImage1(url + uuid);
+					else if(i==1) diary.setImage2(url +uuid);
+					else if(i==2) diary.setImage3(url + uuid);
+								}
+			}
+
+		}
+
 		return diaryRepository.save(diary);
     }
 
@@ -51,7 +102,8 @@ public class DiaryService {
     	return filesRepository.findById((long) 1).
     			 orElseThrow(() -> new IllegalArgumentException("not found : " + 1));
     }
-
+    
+    
     public void upload(String imageByte)
     {
     	filesRepository.save(new Files(imageByte));
