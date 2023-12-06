@@ -10,24 +10,25 @@ import java.util.List;
 
 
 @Getter
+@AllArgsConstructor
 public class DiaryResponse {
     private final String emotion;
     private final String content;
-    private long user_id;
-    private long id;
-    private int empathy;
-    private LocalDateTime createdAt;
-    private String audio;
-    private List<String> images;
-    
+    private final long userId;
+    private final long id;
+    private final int empathy;
+    private final LocalDateTime createdAt;
+    private final String audio;
+    private final List<String> images;
+
     public DiaryResponse(Diary diary) {
         this.emotion = diary.getEmotion();
         this.content = diary.getContent();
-        this.user_id = diary.getUserId();
+        this.userId = diary.getUserId();
         this.id = diary.getId();
         this.empathy = diary.getEmpathy();
         this.createdAt = diary.getCreatedAt();
         this.audio = diary.getAudio();
-        this.images = diary.getImages();
+        this.images = new ArrayList<>(diary.getImages());
     }
 }
