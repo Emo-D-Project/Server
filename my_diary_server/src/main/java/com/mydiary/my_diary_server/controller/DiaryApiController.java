@@ -60,7 +60,7 @@ public class DiaryApiController {
         Diary diary = diaryService.findById(id);
 
         return ResponseEntity.ok()
-                .body(new DiaryResponse(diary));
+                .body(new DiaryResponse(diary)); 
     }
 
     @GetMapping("/mine/{userid}")
