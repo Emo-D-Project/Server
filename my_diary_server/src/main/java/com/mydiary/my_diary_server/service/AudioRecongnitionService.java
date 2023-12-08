@@ -144,11 +144,25 @@ public class AudioRecongnitionService {
         System.out.println("status: " + apiResponse.getStatus());
         System.out.println("verified: " + apiResponse.getResults().isVerified());
 
-        // utterances 배열의 첫 번째 요소에서 msg 값을 출력
-        String msg = apiResponse.getResults().getUtterances()[0].getMsg();
-        System.out.println("msg: " + msg);
+        try {
+            // utterances 배열이 비어있는지 확인
+            Utterance[] utterances = apiResponse.getResults().getUtterances();
+            if (utterances != null && utterances.length > 0) {
+                // 첫 번째 요소에서 msg 값을 출력
+                String msg = utterances[0].getMsg();
+                System.out.println("msg: " + msg);
+                return msg;
+            } else {
+                // utterances 배열이 비어있는 경우 또는 msg가 없는 경우에 대한 처리
+                System.out.println("No utterances or msg found in the response.");
+                return "";
+            }
+        } catch (Exception e) {
+            // 예외가 발생한 경우에 대한 처리
+            System.out.println("Error processing API response: " + e.getMessage());
+        }
 
-        return msg;
+        return "";
     }
 }
 
