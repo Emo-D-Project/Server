@@ -140,6 +140,17 @@ public class AudioRecongnitionService {
         Gson gson = new Gson();
         ApiResponse apiResponse = gson.fromJson(response, ApiResponse.class);
 
+        if(apiResponse.getStatus().equals("transcribing")){
+            try {
+                Thread.sleep(2000); // 2초 동안 코드를 지연
+
+                // 재귀적으로 GetTranscribeSample 호출
+                return GetTranscribeSample(id, accessToken);
+            } catch (InterruptedException e) {
+                // InterruptedException 처리
+                System.out.println("Error during sleep: " + e.getMessage());
+            }
+        }
 
 
         try {
@@ -159,6 +170,7 @@ public class AudioRecongnitionService {
                 }
             } else {
                 System.out.println("No utterances found in the response.");
+                return "";
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             // ArrayIndexOutOfBoundsException 발생 시에 대한 처리
