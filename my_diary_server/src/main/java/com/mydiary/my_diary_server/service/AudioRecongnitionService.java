@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class AudioRecongnitionService {
 
+
     public String PostTranscribeSample(MultipartFile audioFile) throws IOException, InterruptedException {
         String accessToken = GetAccessToken();
 
@@ -139,24 +140,34 @@ public class AudioRecongnitionService {
         Gson gson = new Gson();
         ApiResponse apiResponse = gson.fromJson(response, ApiResponse.class);
 
-       
+
+
         try {
-            // utterances 배열이 비어있는지 확인
             Utterance[] utterances = apiResponse.getResults().getUtterances();
+
+            // utterances 배열이 비어 있지 않고 첫 번째 요소가 존재하는 경우에만 처리
             if (utterances != null && utterances.length > 0) {
-                // 첫 번째 요소에서 msg 값을 출력
                 String msg = utterances[0].getMsg();
-                System.out.println("msg: " + msg);
-                return msg;
+
+                // msg가 비어 있지 않은 경우에만 출력
+                if (msg != null && !msg.isEmpty()) {
+                    System.out.println("msg: " + msg);
+                    return msg;
+                } else {
+                    System.out.println("msg is empty or null.");
+                    return "";
+                }
             } else {
-                // utterances 배열이 비어있는 경우 또는 msg가 없는 경우에 대한 처리
-                System.out.println("No utterances or msg found in the response.");
-                return "";
+                System.out.println("No utterances found in the response.");
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // ArrayIndexOutOfBoundsException 발생 시에 대한 처리
+            System.out.println("Error accessing utterances array: " + e.getMessage());
         } catch (Exception e) {
-            // 예외가 발생한 경우에 대한 처리
+            // 다른 예외가 발생한 경우에 대한 처리
             System.out.println("Error processing API response: " + e.getMessage());
         }
+
 
         return "";
     }
