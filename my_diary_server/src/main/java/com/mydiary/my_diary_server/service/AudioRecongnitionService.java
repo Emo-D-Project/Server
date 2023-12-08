@@ -139,11 +139,7 @@ public class AudioRecongnitionService {
         Gson gson = new Gson();
         ApiResponse apiResponse = gson.fromJson(response, ApiResponse.class);
 
-        // 파싱된 결과를 출력
-        System.out.println("id: " + apiResponse.getId());
-        System.out.println("status: " + apiResponse.getStatus());
-        System.out.println("verified: " + apiResponse.getResults().isVerified());
-
+       
         try {
             // utterances 배열이 비어있는지 확인
             Utterance[] utterances = apiResponse.getResults().getUtterances();
