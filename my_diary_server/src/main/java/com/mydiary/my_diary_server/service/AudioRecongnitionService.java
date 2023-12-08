@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class AudioRecongnitionService {
 
-
     public String PostTranscribeSample(MultipartFile audioFile) throws IOException, InterruptedException {
         String accessToken = GetAccessToken();
 
