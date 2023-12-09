@@ -58,7 +58,7 @@ public class Diary {
     	this.content = content;
     	this.is_comm = is_share;
     	this.is_share = is_comm;
-    	this.CreatedAt = LocalDateTime.now();
+    	this.CreatedAt = LocalDateTime.now().plusHours(9);
     }
 
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {
