@@ -15,7 +15,7 @@ public class TimeApiController {
     @Operation(summary = "현재 시간 반환")
     public String getKoreanTime() {
         // 현재 한국 시간 가져오기
-        LocalDateTime koreanTime = LocalDateTime.now().plusHours(0); // UTC+9 (한국 표준시)
+        LocalDateTime koreanTime = LocalDateTime.now().plusHours(9); // UTC+9 (한국 표준시)
 
         System.out.println("korea time: " + koreanTime);
 
