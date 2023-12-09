@@ -140,16 +140,48 @@ public class AudioRecongnitionService {
         Gson gson = new Gson();
         ApiResponse apiResponse = gson.fromJson(response, ApiResponse.class);
 
-        // 파싱된 결과를 출력
-        System.out.println("id: " + apiResponse.getId());
-        System.out.println("status: " + apiResponse.getStatus());
-        System.out.println("verified: " + apiResponse.getResults().isVerified());
+        if(apiResponse.getStatus().equals("transcribing")){
+            try {
+                Thread.sleep(2000); // 2초 동안 코드를 지연
 
-        // utterances 배열의 첫 번째 요소에서 msg 값을 출력
-        String msg = apiResponse.getResults().getUtterances()[0].getMsg();
-        System.out.println("msg: " + msg);
+                // 재귀적으로 GetTranscribeSample 호출
+                return GetTranscribeSample(id, accessToken);
+            } catch (InterruptedException e) {
+                // InterruptedException 처리
+                System.out.println("Error during sleep: " + e.getMessage());
+            }
+        }
 
-        return msg;
+
+        try {
+            Utterance[] utterances = apiResponse.getResults().getUtterances();
+
+            // utterances 배열이 비어 있지 않고 첫 번째 요소가 존재하는 경우에만 처리
+            if (utterances != null && utterances.length > 0) {
+                String msg = utterances[0].getMsg();
+
+                // msg가 비어 있지 않은 경우에만 출력
+                if (msg != null && !msg.isEmpty()) {
+                    System.out.println("msg: " + msg);
+                    return msg;
+                } else {
+                    System.out.println("msg is empty or null.");
+                    return "";
+                }
+            } else {
+                System.out.println("No utterances found in the response.");
+                return "";
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // ArrayIndexOutOfBoundsException 발생 시에 대한 처리
+            System.out.println("Error accessing utterances array: " + e.getMessage());
+        } catch (Exception e) {
+            // 다른 예외가 발생한 경우에 대한 처리
+            System.out.println("Error processing API response: " + e.getMessage());
+        }
+
+
+        return "";
     }
 }
 
