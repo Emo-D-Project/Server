@@ -142,7 +142,7 @@ public class AudioRecongnitionService {
 
         if(apiResponse.getStatus().equals("transcribing")){
             try {
-                Thread.sleep(2000); // 2초 동안 코드를 지연
+                Thread.sleep(500); // 0.5초 동안 코드를 지연
 
                 // 재귀적으로 GetTranscribeSample 호출
                 return GetTranscribeSample(id, accessToken);
