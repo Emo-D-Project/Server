@@ -8,6 +8,7 @@ import com.mydiary.my_diary_server.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -24,6 +25,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
         public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
         public static final String REDIRECT_PATH = "/diaries";
+
 
         private final TokenProvider tokenProvider;
         private final RefreshTokenRepository refreshTokenRepository;

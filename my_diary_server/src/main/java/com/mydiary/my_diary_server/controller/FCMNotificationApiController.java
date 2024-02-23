@@ -26,7 +26,6 @@ public class FCMNotificationApiController {
     {
     	
     }
-    
 
     @Operation(summary = "알림 보내기")
     @PostMapping()

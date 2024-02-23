@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentApiController {
 	private final CommentService commentService;
 	
-	
 	@PostMapping("/api/comments/create")
     @Operation(summary="댓글 작성")
 	public ResponseEntity<Comment> addComment(@RequestBody AddCommentRequest request, Principal principal)
