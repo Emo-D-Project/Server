@@ -34,7 +34,7 @@ public class DiaryApiController {
     public ResponseEntity<Diary> addDiary
             (@RequestPart AddDiaryRequest request, @RequestPart(required=false) List<MultipartFile> imageFile,
     		@RequestPart(required=false) MultipartFile audioFile,
-    		Principal principal) throws IOException {
+    		Principal principal) throws Exception {
     
         Diary savedDiary = diaryService.save(request, imageFile, audioFile, principal.getName());
     	
@@ -44,7 +44,7 @@ public class DiaryApiController {
     
     @GetMapping("/read")
     @Operation(summary="일기 전체 읽기")
-    public ResponseEntity<List<DiaryResponse>> findAlldiaries() {
+    public ResponseEntity<List<DiaryResponse>> findAlldiaries() throws Exception {
         List<DiaryResponse> diaries = diaryService.findAll()
                 .stream()
                 .map(DiaryResponse::new)
@@ -56,7 +56,7 @@ public class DiaryApiController {
     
     @GetMapping("/read/{id}")
     @Operation(summary="특정 일기 읽기")
-    public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) {
+    public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) throws Exception {
         Diary diary = diaryService.findById(id);
 
         return ResponseEntity.ok()
@@ -65,8 +65,7 @@ public class DiaryApiController {
 
     @GetMapping("/mine/{userid}")
     @Operation(summary="자신의 일기 불러오기")
-    public ResponseEntity<List<DiaryResponse>> findmydiaries(Principal principal)
-    {
+    public ResponseEntity<List<DiaryResponse>> findmydiaries(Principal principal) throws Exception {
     	List<DiaryResponse> diaries = diaryService.findMine(Long.parseLong(principal.getName()))
                 .stream()
                 .map(DiaryResponse::new)
@@ -96,7 +95,7 @@ public class DiaryApiController {
     @PutMapping("/change/{id}")
     @Operation(summary="일기 수정")
     public ResponseEntity<Diary> updateDiaries(@PathVariable long id,
-                                               @RequestBody UpdateDiaryRequest request) {
+                                               @RequestBody UpdateDiaryRequest request) throws Exception {
         Diary updatedDiary = diaryService.update(id, request);
 
         return ResponseEntity.ok()

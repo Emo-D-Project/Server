@@ -24,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.IOException;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -45,14 +46,17 @@ public class DiaryService {
 
 	@Value("${spring.cloud.gcp.storage.bucket}") // application.yml에 써둔 bucket 이름
 	private String bucketName;
-    public Diary save(AddDiaryRequest req, List<MultipartFile> imageFile, MultipartFile audio, String author) throws IOException {
-		// 이미지와 오디오 처리하는 부분
-		Diary diary = new Diary(Long.parseLong(author), req.getContent(), req.getEmotion(), req.getIs_share(), req.getIs_comm());
 
-		String url = "https://storage.googleapis.com/emod_project/";
+	// 암호화에 사용할 대칭키 설정
+	private final String secretKey = "emoDemoDemoDemoD"; // 16바이트 문자열
+    public Diary save(AddDiaryRequest req, List<MultipartFile> imageFile, MultipartFile audio, String author) throws Exception {
+		// 이미지와 오디오 처리하는 부분
+		Diary diary = new Diary(Long.parseLong(author), encrypt(req.getContent()), req.getEmotion(), req.getIs_share(), req.getIs_comm());
+
+		String url = "https://storage.googleapis.com/emod_project_bucket/";
 		
 		//클라우드에 이미지 업로드
-		if(audio != null){//예외처리
+		if(audio != null && !audio.isEmpty()){//예외처리
 			String uuidAudio = UUID.randomUUID().toString();
 			
 			String ext = audio.getContentType();
@@ -96,6 +100,24 @@ public class DiaryService {
 
 		return diaryRepository.save(diary);
     }
+	// 데이터 암호화
+	private String encrypt(String data) throws Exception {
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
+		cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+		byte[] encryptedBytes = cipher.doFinal(data.getBytes());
+		return Base64.getEncoder().encodeToString(encryptedBytes); // Base64 인코딩하여 문자열로 반환
+	}
+
+	// 데이터 복호화
+	private String decrypt(String encryptedData) throws Exception {
+		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "AES");
+		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+		byte[] decodedBytes = Base64.getDecoder().decode(encryptedData);
+		byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+		return new String(decryptedBytes);
+	}
 
     public Files view()
     {
@@ -108,20 +130,29 @@ public class DiaryService {
     {
     	filesRepository.save(new Files(imageByte));
     }
-    
-    public List<Diary> findAll() {
-        return diaryRepository.findAll();
-    }
-    
-    public List<Diary> findMine(Long user_id)
-    {
-    	return diaryRepository.findByUserId(user_id);
+
+	public List<Diary> findAll() throws Exception {
+		List<Diary> diaries = diaryRepository.findAll();
+		for (Diary diary : diaries) {
+			diary.setContent(decrypt(diary.getContent()));
+		}
+
+		return diaries;
+	}
+    public List<Diary> findMine(Long user_id) throws Exception {
+		List<Diary> diaries = diaryRepository.findByUserId(user_id);
+		for (Diary diary : diaries) {
+			diary.setContent(decrypt(diary.getContent()));
+		}
+		return diaries;
     }
 
-    public Diary findById(long id) {
-        return diaryRepository.findById(id)
+    public Diary findById(long id) throws Exception {
+        Diary diary =  diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-    
+		diary.setContent(decrypt(diary.getContent()));
+
+		return diary;
     }
 
     public Integer getCount(Long user_id)
@@ -193,20 +224,6 @@ public class DiaryService {
       //authorize
         diaryRepository.delete(article);
     }
-
-    /*
-    public DiaryReportResponse getReport(Long user_id)
-    {
-    	List<Diary> diary = diaryRepository.findByUserId(user_id);
-    	DiaryReportResponse result;
-    	int i;
-    	for(i=0; i<diary.size(); i++)
-    	{
-    		result = new DiaryReportResponse(diary.get(i).getCreatedAt());
-    	}
-    	
-    }
-    */
       
     public Diary searchPopular(Long user_id)
     {
@@ -496,20 +513,20 @@ public class DiaryService {
     }
     
     @Transactional
-    public Diary update(long id, UpdateDiaryRequest request) {
-        Diary article = diaryRepository.findById(id)
+    public Diary update(long id, UpdateDiaryRequest request) throws Exception {
+        Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        authorizeArticleAuthor(article);
+        authorizeDiaryAuthor(diary);
         //authorize
-        article.update(request.getEmotion(), request.getContent(), request.getIs_share(), request.getIs_comm());
+        diary.update(request.getEmotion(), encrypt(request.getContent()), request.getIs_share(), request.getIs_comm());
         
-        return article;
+        return diary;
     }
 
   
     // 일기를 작성한 유저인지 확인
-    private static void authorizeArticleAuthor(Diary diary) {
+    private static void authorizeDiaryAuthor(Diary diary) {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
     	if(!(diary.getUserId() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");
