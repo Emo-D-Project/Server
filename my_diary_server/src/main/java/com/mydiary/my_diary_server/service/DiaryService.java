@@ -16,8 +16,6 @@ import com.mydiary.my_diary_server.repository.ReportRepository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -519,20 +516,20 @@ public class DiaryService {
     }
     
     @Transactional
-    public Diary update(long id, UpdateDiaryRequest request) {
-        Diary article = diaryRepository.findById(id)
+    public Diary update(long id, UpdateDiaryRequest request) throws Exception {
+        Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
 
-        authorizeArticleAuthor(article);
+        authorizeDiaryAuthor(diary);
         //authorize
-        article.update(request.getEmotion(), request.getContent(), request.getIs_share(), request.getIs_comm());
+        diary.update(request.getEmotion(), encrypt(request.getContent()), request.getIs_share(), request.getIs_comm());
         
-        return article;
+        return diary;
     }
 
   
     // 일기를 작성한 유저인지 확인
-    private static void authorizeArticleAuthor(Diary diary) {
+    private static void authorizeDiaryAuthor(Diary diary) {
     	String author = SecurityContextHolder.getContext().getAuthentication().getName();
     	if(!(diary.getUserId() == Long.parseLong(author)))
     		throw new IllegalArgumentException("not authorized");

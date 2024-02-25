@@ -95,7 +95,7 @@ public class DiaryApiController {
     @PutMapping("/change/{id}")
     @Operation(summary="일기 수정")
     public ResponseEntity<Diary> updateDiaries(@PathVariable long id,
-                                               @RequestBody UpdateDiaryRequest request) {
+                                               @RequestBody UpdateDiaryRequest request) throws Exception {
         Diary updatedDiary = diaryService.update(id, request);
 
         return ResponseEntity.ok()
