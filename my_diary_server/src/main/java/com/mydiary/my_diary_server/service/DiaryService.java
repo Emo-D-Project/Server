@@ -56,8 +56,7 @@ public class DiaryService {
 		String url = "https://storage.googleapis.com/emod_project_bucket/";
 		
 		//클라우드에 이미지 업로드
-		if(audio != null || audio.isEmpty()){//예외처리
-			System.out.println("upload audio on cloud");
+		if(audio != null && !audio.isEmpty()){//예외처리
 			String uuidAudio = UUID.randomUUID().toString();
 			
 			String ext = audio.getContentType();
@@ -78,8 +77,6 @@ public class DiaryService {
 
 		if(imageFile != null)//null값처리
 		{
-			System.out.println("upload images on cloud");
-
 			if(!imageFile.get(0).isEmpty()){//빈 리스트 예외처리
 				int i;
 				for (i=0; i<imageFile.size(); i++) {
