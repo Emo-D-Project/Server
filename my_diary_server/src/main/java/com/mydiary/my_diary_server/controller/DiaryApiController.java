@@ -74,8 +74,7 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
-    // 주석추가
-    
+
     @GetMapping("/report")
     @Operation(summary="감정통계")
     public DiaryResponse analysis()
