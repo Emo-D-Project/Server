@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/EmoDProjectServer.iml" filepath="$PROJECT_DIR$/.idea/EmoDProjectServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.mydiary.EmoDProjectServer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.mydiary.EmoDProjectServer.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.mydiary.EmoDProjectServer.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.mydiary.EmoDProjectServer.test.iml" />
     </modules>
   </component>
 </project>
