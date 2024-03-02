@@ -33,7 +33,6 @@ jobs:
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
-          cd ./my_diary_server
           chmod +x gradlew
           ./gradlew build -x test
           
@@ -45,7 +44,6 @@ jobs:
           
       - name: Docker image build
         run: |
-          cd ./my_diary_server
           docker build -t ${{secrets.DOCKERHUB_ID}}/test-server .
       
       - name: Docker Hub push
