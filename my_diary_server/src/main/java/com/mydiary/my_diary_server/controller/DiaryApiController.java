@@ -28,6 +28,7 @@ import java.util.List;
 public class DiaryApiController {
 
     private final DiaryService diaryService;
+
        
     @PostMapping(value = "create", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary="일기 등록")
@@ -74,8 +75,7 @@ public class DiaryApiController {
         return ResponseEntity.ok()
                 .body(diaries);
     }
-    // 주석추가
-    
+
     @GetMapping("/report")
     @Operation(summary="감정통계")
     public DiaryResponse analysis()
