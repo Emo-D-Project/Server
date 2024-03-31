@@ -60,9 +60,23 @@ public class UserController {
     @Autowired
     public UserController(UserService userService){this.userService = userService;}
 
+    @GetMapping("/diaryPassword")
+    @Operation(summary = "일기장 비밀번호 가져오는 기능")
+    public ResponseEntity<String> getDiaryPassword(Principal principal){
+        return ResponseEntity.ok(userService.getDiaryPassword(Long.parseLong(principal.getName())));
+    }
+
+    // 일기장 비밀번호 변경
+    @PutMapping("/diaryPassword")
+    @Operation(summary = "일기장 비밀번호 변경하는 기능")
+    public ResponseEntity<String> changeDiaryPassword(@RequestBody String password, Principal principal){
+        return ResponseEntity.ok(userService.changeDiaryPassword(Long.parseLong(principal.getName()), password));
+    }
+
+
     @GetMapping()
     @Operation(summary = "자신의 아이디를 가져오는 기능")
-    public ResponseEntity<Long> GetMyUserId(Principal principal){
+    public ResponseEntity<Long> getMyUserId(Principal principal){
         return ResponseEntity.ok(Long.parseLong(principal.getName()));
     }
 

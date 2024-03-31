@@ -41,6 +41,10 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String firebaseToken;
 
+    // 비밀번호는 초기값이 0000 이다
+    @Column(nullable = true)
+    private String diaryPassword = "0000";
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
@@ -81,5 +85,7 @@ public class User implements UserDetails {
     }
 
 
-
+    public String getDiaryPassword() {
+        return this.diaryPassword;
+    }
 }
