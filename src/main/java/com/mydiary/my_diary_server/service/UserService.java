@@ -92,4 +92,15 @@ public class UserService {
     }
 
 
+    public String getDiaryPassword(Long userId){
+        return userRepository.findById(userId).get().getDiaryPassword();
+
+    }
+
+    public String changeDiaryPassword(long userId, String password) {
+        User user = userRepository.findById(userId).get();
+        user.setDiaryPassword(password);
+        userRepository.save(user);
+        return "비밀번호 변경 완료";
+    }
 }
