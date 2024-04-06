@@ -1,12 +1,10 @@
 package com.mydiary.my_diary_server.service;
 
 import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,6 +12,11 @@ import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class WeatherService {
@@ -58,19 +61,20 @@ public class WeatherService {
                 }
             }
 
-            JSONObject jsonObject = new JSONObject(response.toString());
-            JSONObject body = jsonObject.getJSONObject("response").getJSONObject("body");
-            JSONArray items = body.getJSONObject("items").getJSONArray("item");
-
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject item = items.getJSONObject(i);
-                if (item.getString("category").equals("PTY")) {
-                    int pty = Integer.parseInt(item.getString("obsrValue"));
+            // Gson을 사용하여 JSON 문자열을 직접 파싱
+            String[] lines = response.toString().split("\n");
+            for (String line : lines) {
+                if (line.contains("\"category\":\"PTY\"")) {
+                    int startIndex = line.indexOf("\"obsrValue\":") + 12;
+                    int endIndex = line.indexOf(",", startIndex);
+                    int pty = Integer.parseInt(line.substring(startIndex, endIndex).trim());
                     String weatherStatus = convertPtyToString(pty);
                     result.append("날씨 상태: ").append(weatherStatus);
                     break;
                 }
             }
+
+
 
             conn.disconnect();
         } catch (Exception e) {
