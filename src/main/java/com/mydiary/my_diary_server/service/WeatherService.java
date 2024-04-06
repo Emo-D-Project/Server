@@ -1,5 +1,7 @@
 package com.mydiary.my_diary_server.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -61,20 +63,34 @@ public class WeatherService {
                 }
             }
 
-            // Gson을 사용하여 JSON 문자열을 직접 파싱
-            String[] lines = response.toString().split("\n");
-            for (String line : lines) {
-                if (line.contains("\"category\":\"PTY\"")) {
-                    int startIndex = line.indexOf("\"obsrValue\":") + 12;
-                    int endIndex = line.indexOf(",", startIndex);
-                    int pty = Integer.parseInt(line.substring(startIndex, endIndex).trim());
+            // ObjectMapper 객체 생성
+            ObjectMapper mapper = new ObjectMapper();
+
+// JSON 문자열을 JsonNode 객체로 파싱
+            JsonNode rootNode = mapper.readTree(response.toString());
+
+            // response 필드 내의 body 객체 가져오기
+            JsonNode bodyNode = rootNode.get("response").get("body");
+
+            // body 객체 내의 items 객체 가져오기
+            JsonNode itemsNode = bodyNode.get("items");
+
+            // items 객체 내의 item 배열 가져오기
+            JsonNode itemArrayNode = itemsNode.get("item");
+
+            // item 배열 순회
+            for (JsonNode item : itemArrayNode) {
+                // category가 PTY인지 확인
+                if (item.get("category").asText().equals("PTY")) {
+                    // obsrValue 값을 정수로 변환
+                    int pty = item.get("obsrValue").asInt();
+                    // pty에 따라 날씨 상태를 가져오는 함수 호출
                     String weatherStatus = convertPtyToString(pty);
+                    // 결과 문자열에 날씨 상태 추가
                     result.append("날씨 상태: ").append(weatherStatus);
                     break;
                 }
             }
-
-
 
             conn.disconnect();
         } catch (Exception e) {
