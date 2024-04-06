@@ -45,6 +45,10 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String diaryPassword = "0000";
 
+    // 일기장 잠금 on/off 여부
+    @Column(nullable = true)
+    private Boolean isDiaryLock = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
@@ -87,5 +91,13 @@ public class User implements UserDetails {
 
     public String getDiaryPassword() {
         return this.diaryPassword;
+    }
+
+    public void setDiaryPasswordSwitch(boolean b) {
+        this.isDiaryLock = b;
+    }
+
+    public boolean isDiaryPasswordSwitch() {
+        return this.isDiaryLock;
     }
 }

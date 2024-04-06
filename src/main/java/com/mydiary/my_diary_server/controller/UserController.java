@@ -73,6 +73,22 @@ public class UserController {
         return ResponseEntity.ok(userService.changeDiaryPassword(Long.parseLong(principal.getName()), password));
     }
 
+    // 일기장 비밀번호 on/off 설정
+    @PutMapping("/diaryPassword/switch")
+    @Operation(summary = "일기장 비밀번호 on/off 설정 변경하는 기능")
+    public ResponseEntity<String> switchDiaryPassword(Principal principal){
+        return ResponseEntity.ok(userService.switchDiaryPassword(Long.parseLong(principal.getName())));
+    }
+
+    // 일기장 비밀번호 on/off 체크 기능
+    @GetMapping("/diaryPassword/switch")
+    @Operation(summary = "일기장 비밀번호 on/off 설정했는지 확인하는 기능")
+    public ResponseEntity<String> checkDiaryPasswordSwitch(Principal principal){
+        return ResponseEntity.ok(userService.checkDiaryPasswordSwitch(Long.parseLong(principal.getName())));
+    }
+
+
+
 
     @GetMapping()
     @Operation(summary = "자신의 아이디를 가져오는 기능")
