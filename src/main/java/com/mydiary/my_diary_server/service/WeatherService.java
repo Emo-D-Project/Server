@@ -66,7 +66,7 @@ public class WeatherService {
             // ObjectMapper 객체 생성
             ObjectMapper mapper = new ObjectMapper();
 
-// JSON 문자열을 JsonNode 객체로 파싱
+            // JSON 문자열을 JsonNode 객체로 파싱
             JsonNode rootNode = mapper.readTree(response.toString());
 
             // response 필드 내의 body 객체 가져오기
