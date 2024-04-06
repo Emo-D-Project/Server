@@ -1,6 +1,5 @@
 package com.mydiary.my_diary_server.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -74,7 +73,7 @@ public class WeatherService {
             }
 
             conn.disconnect();
-        } catch (IOException | JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
