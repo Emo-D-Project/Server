@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-@Slf4j
 @Service
 public class WeatherService {
 
@@ -31,7 +30,7 @@ public class WeatherService {
         if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
             // 유효하지 않은 위도 또는 경도 값이므로 처리
             return "유효하지 않은 위도 또는 경도 값입니다.";
-        } 
+        }
 
         int intLat = (int) lat; // 소수점 이하 값은 버려집니다.
         int intLon = (int) lon; // 소수점 이하 값은 버려집니다.
