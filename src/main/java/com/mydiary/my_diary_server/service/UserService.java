@@ -39,45 +39,6 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("unexpected user"));
     }
 
-
-//    public UserResponseDTO registerUser(UserDTO userDTO) {
-//        User user = new User();
-//        user.setUsername(userDTO.getUsername());
-//
-//        user.setPassword(userDTO.getPassword());
-//        user.setEmail(userDTO.getEmail());
-//
-//        User savedUser = userDAO.insertUser(user);
-//
-//        UserResponseDTO userResponseDTO = new UserResponseDTO();
-//        userResponseDTO.setEmail(savedUser.getEmail());
-//        userResponseDTO.setUsername(savedUser.getUsername());
-//
-//        return userResponseDTO;
-//    }
-
-//    public UserResponseDTO loginUser(UserLoginDTO userLoginDTO) {
-//        String email = userLoginDTO.getEmail();
-//        String password = userLoginDTO.getPassword();
-//
-//        // 여기에서 사용자 인증을 수행합니다.
-//        User authenticatedUser = userDAO.findByEmail(email);
-//
-//        // 사용자가 존재하고, 패스워드가 일치하는 경우에만 로그인 성공
-//        if (authenticatedUser != null && authenticatedUser.getPassword().equals(password)) {
-//            UserResponseDTO userResponseDTO = new UserResponseDTO();
-//            userResponseDTO.setEmail(authenticatedUser.getEmail());
-//            userResponseDTO.setUsername(authenticatedUser.getUsername());
-//            return userResponseDTO;
-//        } else {
-//            try {
-//                throw new AuthenticationException("로그인에 실패하였습니다.");
-//            } catch (AuthenticationException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-
     // 아이디 중복 체크
     @Transactional()
     public User checkUsername(String username) {
@@ -102,5 +63,17 @@ public class UserService {
         user.setDiaryPassword(password);
         userRepository.save(user);
         return "비밀번호 변경 완료";
+    }
+
+    public String switchDiaryPassword(long userId) {
+        User user = userRepository.findById(userId).get();
+        user.setDiaryPasswordSwitch(!user.isDiaryPasswordSwitch());
+        userRepository.save(user);
+        return "비밀번호 on/off 설정 변경 완료";
+    }
+
+    public String checkDiaryPasswordSwitch(long l) {
+User user = userRepository.findById(l).get();
+        return user.isDiaryPasswordSwitch() ? "true" : "false";
     }
 }
