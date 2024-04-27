@@ -87,6 +87,13 @@ public class UserController {
         return ResponseEntity.ok(userService.checkDiaryPasswordSwitch(Long.parseLong(principal.getName())));
     }
 
+    // 유저 firebaseToken 토큰 저장
+    @PutMapping("/firebaseToken")
+    @Operation(summary = "firebaseToken을 저장하는 기능")
+    public ResponseEntity<String> saveFirebaseToken(@RequestBody String firebaseToken, Principal principal){
+        return ResponseEntity.ok(userService.saveFirebaseToken(Long.parseLong(principal.getName()), firebaseToken));
+    }
+
     @GetMapping()
     @Operation(summary = "자신의 아이디를 가져오는 기능")
     public ResponseEntity<Long> getMyUserId(Principal principal){
