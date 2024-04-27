@@ -76,4 +76,11 @@ public class UserService {
 User user = userRepository.findById(l).get();
         return user.isDiaryPasswordSwitch() ? "true" : "false";
     }
+
+    public String saveFirebaseToken(long l, String firebaseToken) {
+        User user = userRepository.findById(l).get();
+        user.setFirebaseToken(firebaseToken);
+        userRepository.save(user);
+        return "firebaseToken 저장 완료";
+    }
 }
