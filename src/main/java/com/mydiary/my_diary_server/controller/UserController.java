@@ -87,9 +87,6 @@ public class UserController {
         return ResponseEntity.ok(userService.checkDiaryPasswordSwitch(Long.parseLong(principal.getName())));
     }
 
-
-
-
     @GetMapping()
     @Operation(summary = "자신의 아이디를 가져오는 기능")
     public ResponseEntity<Long> getMyUserId(Principal principal){
