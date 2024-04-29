@@ -10,10 +10,9 @@ public class FCMNotificationRequestDto{
     private String body;
 
     @Builder
-    public FCMNotificationRequestDto(Long targetUserId, String title, String body){
+    public FCMNotificationRequestDto(Long targetUserId, String title, String body, String time){
         this.targetUserId = targetUserId;
         this.title = title;
         this.body = body;
-
     }
 }
