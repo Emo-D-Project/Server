@@ -8,11 +8,13 @@ import com.mydiary.my_diary_server.dto.MessageResponse;
 import com.mydiary.my_diary_server.repository.MessageRepository;
 import com.mydiary.my_diary_server.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@Slf4j
 public class MessageService {
 
     private final MessageRepository messageRepository;
@@ -91,6 +93,10 @@ public class MessageService {
             if (chatRoom == null) {
                 chatRoom = new ChatRoom(otherUserId, "Room with User " + otherUserId, message.isRead());
             }
+
+            if(!userRepository.findById(otherUserId).isPresent())
+                continue;
+            
             // 마지막 메시지 업데이트
             chatRoom.setLastMessage(message.getContent());
             chatRoom.setLastMessageSentAt(message.getSentAt());
