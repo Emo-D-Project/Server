@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Console;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -31,9 +33,13 @@ public class FCMNotificationService {
 
         if (user.isPresent()) {
             if (user.get().getFirebaseToken() != null) {
+                String body = requestDto.getBody();
+                // body에 현재 시각을 추가
+                body += " \n보낸 시간 : " + LocalDateTime.now().toString();
+
                 Notification notification = Notification.builder()
                         .setTitle(requestDto.getTitle())
-                        .setBody(requestDto.getBody())
+                        .setBody(body)
                         .build();
                 log.info("notification");
 
@@ -41,7 +47,7 @@ public class FCMNotificationService {
                         .setToken(user.get().getFirebaseToken())
                         .setNotification(notification)
                         .build();
-                log.info("message");
+                log.info(message.toString());
 
 
                 try {
