@@ -25,8 +25,6 @@ public class MessageService {
         this.userRepository = userRepository;
     }
 
-
-
     // 메시지 생성
     public MessageResponse save(AddMessageRequest request, Long senderId) {
         Optional<User> sender = userRepository.findById(senderId);
@@ -96,7 +94,7 @@ public class MessageService {
 
             if(!userRepository.findById(otherUserId).isPresent())
                 continue;
-            
+
             // 마지막 메시지 업데이트
             chatRoom.setLastMessage(message.getContent());
             chatRoom.setLastMessageSentAt(message.getSentAt());
