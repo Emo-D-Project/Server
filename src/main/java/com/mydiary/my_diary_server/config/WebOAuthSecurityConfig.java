@@ -32,7 +32,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure() { // 스프링 시큐리티 기능 비활성화
         return (web) -> web.ignoring()
-                .requestMatchers("/img/**", "/css/**", "/js/**","/v3/api-docs/**", 
+                .requestMatchers("/img/**", "/css/**", "/js/**","/v3/api-docs/**",
                 		"/swagger-ui/**", "/user/auth/kakao", "/api/diaries/read/**", "/api/comments/read/**",
                 		"sse/**"
                 		);
@@ -48,14 +48,14 @@ public class WebOAuthSecurityConfig {
         http.sessionManagement(sessionManagement -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // 헤더를 확인할 커스텀 필터 추가
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
         // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정. 나머지 API URL은 인증 필요
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/api/token", "/test").permitAll()
+                .requestMatchers( "/api/token", "/test").permitAll()
                 .requestMatchers("/**").hasRole("USER")
         );
+
+        // 헤더를 확인할 커스텀 필터 추가
+        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
         // /api로 시작하는 url인 경우 401 상태 코드를 반환하도록 예외 처리
