@@ -42,10 +42,13 @@ public class User implements UserDetails {
     private String firebaseToken;
 
     // 비밀번호는 초기값이 0000 이다
+    @Builder.Default
     @Column(nullable = true)
     private String diaryPassword = "0000";
 
     // 일기장 잠금 on/off 여부
+    // 초기화 값은 false 이다
+    @Builder.Default
     @Column(nullable = true)
     private Boolean isDiaryLock = false;
 
