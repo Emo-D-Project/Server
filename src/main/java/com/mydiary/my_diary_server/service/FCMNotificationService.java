@@ -12,7 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 @Slf4j
 @Service
@@ -23,7 +27,7 @@ public class FCMNotificationService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository; // NotificationRepository 주입
 
-    public String sendNotificationByToken(FCMNotificationRequestDto requestDto) {
+    public String sendNotificationByToken(FCMNotificationRequestDto requestDto, Long senderId) {
         Optional<User> user = userRepository.findById(requestDto.getTargetUserId());
 
         if (user.isPresent()) {
@@ -36,13 +40,13 @@ public class FCMNotificationService {
                         .setTitle(requestDto.getTitle())
                         .setBody(body)
                         .build();
-                log.info("notification");
 
                 Message message = Message.builder()
                         .setToken(user.get().getFirebaseToken())
                         .setNotification(notification)
+                        .putData("sendTime", LocalDateTime.now().toString())
+                        .putData("senderId", senderId.toString())
                         .build();
-                log.info(message.toString());
 
 
                 try {
@@ -70,5 +74,10 @@ public class FCMNotificationService {
 
         // 데이터베이스에 저장
         notificationRepository.save(notificationEntity);
+    }
+
+    // 내가 받은 알람 목록 조회
+    public List<Notification> getNotificationList(Long targetUserId) {
+        return notificationRepository.findAllByTargetUserId(targetUserId);
     }
 }
