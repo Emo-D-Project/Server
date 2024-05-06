@@ -35,9 +35,6 @@ public class FCMNotificationService {
 
                 String body = requestDto.getBody();
 
-                // body에 현재 시각을 추가
-                body += " \n보낸 시간 : " + LocalDateTime.now().toString();
-
                 com.google.firebase.messaging.Notification notification = com.google.firebase.messaging.Notification.builder()
                         .setTitle(requestDto.getTitle())
                         .setBody(body)
