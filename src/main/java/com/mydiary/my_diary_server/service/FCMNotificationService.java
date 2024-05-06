@@ -32,7 +32,9 @@ public class FCMNotificationService {
 
         if (user.isPresent()) {
             if (user.get().getFirebaseToken() != null) {
+
                 String body = requestDto.getBody();
+
                 // body에 현재 시각을 추가
                 body += " \n보낸 시간 : " + LocalDateTime.now().toString();
 
@@ -46,6 +48,7 @@ public class FCMNotificationService {
                         .setNotification(notification)
                         .putData("sendTime", LocalDateTime.now().toString())
                         .putData("senderId", senderId.toString())
+                        .putData("title", requestDto.getTitle())
                         .build();
 
 
