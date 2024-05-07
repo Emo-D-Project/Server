@@ -147,6 +147,8 @@ public class DiaryService {
 		return diaries;
     }
 
+    
+    
     public Diary findById(long id) throws Exception {
         Diary diary =  diaryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
@@ -491,6 +493,25 @@ public class DiaryService {
     		}
     	}
     	return result;
+    }
+    
+    public List<Diary> findWeek(Long user_id) throws Exception {
+    	LocalDateTime today = LocalDateTime.now();
+		List<Diary> diaries = findByMonth(today, Long.toString(user_id));
+		List<Diary> result = new ArrayList<Diary>();
+				
+		for(Diary diary : diaries)
+		{
+			if((today.getDayOfMonth() - diary.CreatedAt.getDayOfMonth()) < 7)
+			{
+				result.add(diary);
+			}
+		}
+		
+		for (Diary diary : result) {
+			diary.setContent(decrypt(diary.getContent()));
+		}
+		return result;
     }
     
     public void recommend(LikesDTO dto)

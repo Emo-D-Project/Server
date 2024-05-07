@@ -55,6 +55,9 @@ public class DiaryApiController {
                 .body(diaries);
     }
     
+    
+
+    
     @GetMapping("/read/{id}")
     @Operation(summary="특정 일기 읽기")
     public ResponseEntity<DiaryResponse> findDiary(@PathVariable long id) throws Exception {
@@ -76,6 +79,19 @@ public class DiaryApiController {
                 .body(diaries);
     }
 
+    @GetMapping("/readTest")
+    @Operation(summary="내부테스트용")
+    public  ResponseEntity<List<DiaryResponse>> findWeek(Principal principal) throws Exception{
+    	List<DiaryResponse> diaries = diaryService.findWeek(Long.parseLong(principal.getName()))
+                .stream()
+                .map(DiaryResponse::new)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(diaries);
+    }
+    
+    
     @GetMapping("/report")
     @Operation(summary="감정통계")
     public DiaryResponse analysis()
