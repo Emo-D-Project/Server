@@ -46,6 +46,7 @@ public class FCMNotificationService {
                         .putData("sendTime", LocalDateTime.now().toString())
                         .putData("senderId", senderId.toString())
                         .putData("title", requestDto.getTitle())
+                        .putData("postId", requestDto.getPostId().toString())
                         .build();
 
 
