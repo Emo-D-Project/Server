@@ -111,6 +111,10 @@ public class ChatGPTController {
     	aiReportDTO dto = send(principal);
     	List<String> list = new ArrayList<String>();
     	
+    
+    	
+
+    	
     	res.setEmotion(dto.getEmotion());
     	res.setPositiveEvent(dto.getPositive());
     	res.setNegativeEvent(dto.getNegative());
@@ -121,6 +125,11 @@ public class ChatGPTController {
     	list.add(dto.getFri());
     	list.add(dto.getSat());
     	list.add(dto.getSun());
+    	for(String l : list)
+    	{
+    		if(l != null)
+    			l.replace("\"", "");
+    	}
     	res.setSummary(list);
     	
     	return res;
