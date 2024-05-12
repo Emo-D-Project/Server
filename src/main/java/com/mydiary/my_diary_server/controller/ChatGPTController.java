@@ -112,23 +112,64 @@ public class ChatGPTController {
     	List<String> list = new ArrayList<String>();
     	
 
-    	res.setEmotion(dto.getEmotion());
-    	res.setPositiveEvent(dto.getPositive());
-    	res.setNegativeEvent(dto.getNegative());
-    	list.add(dto.getMon());
-    	list.add(dto.getTue());
-    	list.add(dto.getWed());
-    	list.add(dto.getThu());
-    	list.add(dto.getFri());
-    	list.add(dto.getSat());
-    	list.add(dto.getSun());
-    	for(String l : list)
+    	res.setEmotion(dto.getEmotion().replaceAll("\"", ""));
+    	res.setPositiveEvent(dto.getPositive().replaceAll("\"", ""));
+    	res.setNegativeEvent(dto.getNegative().replaceAll("\"", ""));
+    	
+    	if(dto.getMon() != null)
     	{
-    		if(l != null)
-    			l.replace("\"", "");
-    		if(l == null)
-    			l = "";
+    		list.add(dto.getMon().replaceAll("\"", ""));
     	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	
+    	if(dto.getTue() != null)
+    	{
+    		list.add(dto.getTue().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	
+    	if(dto.getWed() != null)
+    	{
+    		list.add(dto.getThu().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+
+    	if(dto.getFri() != null)
+    	{
+    		list.add(dto.getFri().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	
+    	if(dto.getSat() != null)
+    	{
+    		list.add(dto.getSat().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	
+    	if(dto.getSun() != null)
+    	{
+    		list.add(dto.getSun().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	
     	res.setSummary(list);
     	
     	return res;
