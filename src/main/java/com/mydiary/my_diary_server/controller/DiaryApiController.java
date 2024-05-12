@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,6 +43,18 @@ public class DiaryApiController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
     }
+    
+    @PostMapping(value = "createTest", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary="내부 api")
+    public ResponseEntity<Diary> addDiaryTest
+            (@RequestBody AddDiaryRequest request, @RequestParam int day, Principal principal) throws Exception {
+    
+        Diary savedDiary = diaryService.saveTest(request, day, null, null, principal.getName());
+    	
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedDiary);
+    }
+    
     
     @GetMapping("/read")
     @Operation(summary="일기 전체 읽기")
@@ -81,14 +94,20 @@ public class DiaryApiController {
 
     @GetMapping("/readTest")
     @Operation(summary="내부테스트용")
-    public  ResponseEntity<List<DiaryResponse>> findWeek(Principal principal) throws Exception{
+    public List<String> findWeek(Principal principal) throws Exception{
+    	List<String> result = new ArrayList<String>();
+    	
     	List<DiaryResponse> diaries = diaryService.findWeek(Long.parseLong(principal.getName()))
                 .stream()
                 .map(DiaryResponse::new)
                 .toList();
 
-        return ResponseEntity.ok()
-                .body(diaries);
+    	for(DiaryResponse res : diaries)
+    	{
+    		result.add(res.getContent());
+    	}
+    	
+        return result;
     }
     
     

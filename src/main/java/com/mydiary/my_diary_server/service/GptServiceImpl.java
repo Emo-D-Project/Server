@@ -1,17 +1,27 @@
 package com.mydiary.my_diary_server.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mydiary.my_diary_server.dto.AssistantRequestDTO;
 import com.mydiary.my_diary_server.dto.AssistantResponseDTO;
 import com.mydiary.my_diary_server.dto.MessageDTO;
 import com.mydiary.my_diary_server.dto.MessageResponseDTO;
 import com.mydiary.my_diary_server.dto.MessagesListResponseDTO;
+import com.mydiary.my_diary_server.dto.RunRequestDTO;
+import com.mydiary.my_diary_server.dto.RunResponseDTO;
 import com.mydiary.my_diary_server.dto.ThreadResponseDTO;
-import com.springboot.government_data_project.dto.assistant.*;
 import com.sun.tools.javac.Main;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +29,65 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+
+@Service
+public class GptServiceImpl implements GptService{
+	 @Value("${openai.secret-key}")
+    private String apiKey;
+
+    public JsonNode callChatGpt(String userMsg) throws JsonProcessingException {
+        final String url = "https://api.openai.com/v1/chat/completions";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<String, Object> bodyMap = new HashMap<>();
+        bodyMap.put("model", "gpt-4");
+
+        List<Map<String, String>> messages = new ArrayList<>();
+        Map<String, String> userMessage = new HashMap<>();
+        userMessage.put("role", "user");
+        userMessage.put("content", userMsg);
+        messages.add(userMessage);
+
+        Map<String, String> assistantMessage = new HashMap<>();
+        assistantMessage.put("role", "system");
+        assistantMessage.put("content", "너는 친절한 AI야");
+        messages.add(assistantMessage);
+
+        bodyMap.put("messages", messages);
+
+        String body = objectMapper.writeValueAsString(bodyMap);
+
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+
+        return objectMapper.readTree(response.getBody());
+    }
+
+    @Override
+    public String getAssistantMsg(String userMsg) throws JsonProcessingException {
+        JsonNode jsonNode = callChatGpt(userMsg);
+        String content = jsonNode.path("choices").get(0).path("message").path("content").asText();
+
+        return content;
+    }
+}
+
+/*
 @Slf4j
 @Service
 public class ChatGPTService {
@@ -29,7 +96,7 @@ public class ChatGPTService {
     private String apiKey;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
-    final String assistant_id = "asst_M8PbBHybjonvFhIlWjuhHdaO";
+    final String assistant_id = "asst_0cdgfv5WWsYDlWYHKvhFWi7o";
     String thread_id = "thread_iUbSh6bRuyYtwolIQJ1q9YmG";
 
     public ChatGPTService() {
@@ -44,7 +111,7 @@ public class ChatGPTService {
 
     public void run() {
 
-        final String assistant_id = "asst_M8PbBHybjonvFhIlWjuhHdaO";
+        final String assistant_id = "asst_0cdgfv5WWsYDlWYHKvhFWi7o";
 
         //LOAD YOUR API KEY
         Properties properties = new Properties();
@@ -79,6 +146,16 @@ public class ChatGPTService {
         }
     }
 
+    public MessageResponseDTO sendMessageTest(String role, String content) throws Exception {
+        final String assistant_id = "asst_0cdgfv5WWsYDlWYHKvhFWi7o";
+        ChatGPTService client = new ChatGPTService(apiKey);
+
+        MessageResponseDTO messageResponse = client.sendMessage(thread_id, "user", content);
+        client.runMessage(thread_id, assistant_id);
+
+        return messageResponse;
+    }
+    
     private String post(String url, Object body) throws Exception {
         String jsonBody = objectMapper.writeValueAsString(body);
 
@@ -116,16 +193,6 @@ public class ChatGPTService {
         return objectMapper.readValue(response, MessageResponseDTO.class);
     }
 
-    public MessageResponseDTO sendMessageTest(String role, String content) throws Exception {
-        final String assistant_id = "asst_M8PbBHybjonvFhIlWjuhHdaO";
-        ChatGPTService client = new ChatGPTService(apiKey);
-
-        MessageResponseDTO messageResponse = client.sendMessage(thread_id, "user", content);
-        client.runMessage(thread_id, assistant_id);
-
-        return messageResponse;
-    }
-
 
     public RunResponseDTO runMessage(String threadId, String assistantId) throws Exception {
         String url = "https://api.openai.com/v1/threads/" + threadId + "/runs";
@@ -153,6 +220,8 @@ public class ChatGPTService {
         //return objectMapper.readValue(response.body(), new TypeReference<List<MessageResponseDTO>>() {});
     }
 
+
+    
     // 테스트용 함수 ( 로그인 기능 갖춰지면 삭제 )
     public MessagesListResponseDTO getMessagesTest() throws Exception {
         String url = "https://api.openai.com/v1/threads/" + thread_id + "/messages";
@@ -170,4 +239,11 @@ public class ChatGPTService {
         return objectMapper.readValue(response.body(), MessagesListResponseDTO.class);
         // Assuming the response is a JSON array of MessageResponseDTO
         //return objectMapper.readValue(response.body(), new TypeReference<List<MessageResponseDTO>>() {});
+    
     }
+    
+    
+}
+
+*/
+    

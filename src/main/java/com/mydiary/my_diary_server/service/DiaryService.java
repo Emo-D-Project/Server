@@ -26,6 +26,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -100,6 +102,60 @@ public class DiaryService {
 
 		return diaryRepository.save(diary);
     }
+    
+    public Diary saveTest(AddDiaryRequest req, int day, List<MultipartFile> imageFile, MultipartFile audio, String author) throws Exception {
+		// 이미지와 오디오 처리하는 부분
+		Diary diary = new Diary(Long.parseLong(author), encrypt(req.getContent()), req.getEmotion(), req.getIs_share(), req.getIs_comm(), day);
+
+		String url = "https://storage.googleapis.com/emod_project_bucket/";
+		
+		//클라우드에 이미지 업로드
+		if(audio != null && !audio.isEmpty()){//예외처리
+			String uuidAudio = UUID.randomUUID().toString();
+			
+			String ext = audio.getContentType();
+
+			List<String > uuidImages = new ArrayList<String>();
+			
+			
+			BlobInfo blobInfo = storage.create(
+					BlobInfo.newBuilder(bucketName, uuidAudio)
+							.setContentType(ext)
+							.build(),
+					audio.getInputStream()
+			);
+
+			diary.setAudio(url + uuidAudio);
+			
+		}
+
+		if(imageFile != null)//null값처리
+		{
+			if(!imageFile.get(0).isEmpty()){//빈 리스트 예외처리
+				int i;
+				for (i=0; i<imageFile.size(); i++) {
+					String ext = imageFile.get(i).getContentType();
+					String uuid = UUID.randomUUID().toString();
+
+					BlobInfo blobInfo = storage.create(
+							BlobInfo.newBuilder(bucketName, uuid)
+									.setContentType(ext)
+									.build(),
+							imageFile.get(i).getInputStream()
+					);
+
+					if(i==0) diary.setImage1(url + uuid);
+					else if(i==1) diary.setImage2(url +uuid);
+					else if(i==2) diary.setImage3(url + uuid);
+								}
+			}
+
+		}
+
+		return diaryRepository.save(diary);
+    }
+    
+    
 	// 데이터 암호화
 	private String encrypt(String data) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -497,12 +553,14 @@ public class DiaryService {
     
     public List<Diary> findWeek(Long user_id) throws Exception {
     	LocalDateTime today = LocalDateTime.now();
+    	DayOfWeek wk = today.getDayOfWeek();
+    	int day = wk.getValue();
 		List<Diary> diaries = findByMonth(today, Long.toString(user_id));
 		List<Diary> result = new ArrayList<Diary>();
 				
 		for(Diary diary : diaries)
 		{
-			if((today.getDayOfMonth() - diary.CreatedAt.getDayOfMonth()) < 7)
+			if((today.getDayOfMonth() - diary.CreatedAt.getDayOfMonth()) < day)
 			{
 				result.add(diary);
 			}
@@ -513,6 +571,54 @@ public class DiaryService {
 		}
 		return result;
     }
+    
+    public aiReportDTO findWeekPlusNull(Long user_id) throws Exception {
+    	LocalDateTime today = LocalDateTime.now();
+    	DayOfWeek wk = today.getDayOfWeek();
+    	int dayw = wk.getValue();
+    	aiReportDTO dto = new aiReportDTO();
+		List<Diary> diaries = findByMonth(today, Long.toString(user_id));
+		List<Diary> result = new ArrayList<Diary>();
+		int day;	
+		
+		for(Diary diary : diaries)
+		{
+			day = today.getDayOfMonth() - diary.CreatedAt.getDayOfMonth();
+			
+			if(day < dayw)
+			{
+				switch(day)
+				{
+				case 6:
+					dto.setMon(decrypt(diary.getContent()));
+					break;
+				case 5:
+					dto.setTue(decrypt(diary.getContent()));
+					break;
+				case 4:
+					dto.setWed(decrypt(diary.getContent()));
+					break;
+				case 3:
+					dto.setThu(decrypt(diary.getContent()));
+					break;
+				case 2:
+					dto.setFri(decrypt(diary.getContent()));
+					break;
+				case 1:
+					dto.setSat(decrypt(diary.getContent()));
+					break;
+				case 0:
+					dto.setSun(decrypt(diary.getContent()));
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+    	return dto;
+    }
+    
     
     public void recommend(LikesDTO dto)
     {

@@ -5,6 +5,8 @@ import java.time.YearMonth;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.mydiary.my_diary_server.dto.aiReportDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -47,8 +49,18 @@ public class aiReport {
 	LocalDateTime createdAt;
 	
     @Builder
-    public aiReport(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm){
+    public aiReport(Long user_id, aiReportDTO dto){
     	this.userId = user_id;
+    	this.positive = dto.getPositive();
+    	this.negative = dto.getNegative();
+    	this.emotion = dto.getEmotion();
+    	this.mon = dto.getMon();
+    	this.tue = dto.getTue();
+    	this.wed = dto.getWed();
+    	this.thur = dto.getThu();
+    	this.fri = dto.getFri();
+    	this.sat = dto.getSat();
+    	this.sun = dto.getSun();
     	this.createdAt = LocalDateTime.now();
     }
 }

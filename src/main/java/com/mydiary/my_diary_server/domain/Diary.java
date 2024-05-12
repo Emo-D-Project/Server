@@ -62,6 +62,18 @@ public class Diary {
     	this.CreatedAt = LocalDateTime.now().plusHours(9);
     }
 
+    @Builder
+    public Diary(Long user_id, String content, String emotion, Boolean is_share, Boolean is_comm, int day){
+    	this.userId = user_id;
+    	this.author = Long.toString(user_id);
+    	this.empathy = 0;
+    	this.emotion = emotion;
+    	this.content = content;
+    	this.is_comm = is_share;
+    	this.is_share = is_comm;
+    	this.CreatedAt = LocalDateTime.now().minusDays(day);
+    }
+    
     public void update(String emotion, String content, Boolean is_share, Boolean is_comm) {
         this.emotion = emotion;
         this.content = content;
