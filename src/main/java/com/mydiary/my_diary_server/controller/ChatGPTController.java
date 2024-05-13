@@ -133,8 +133,16 @@ public class ChatGPTController {
     	{
     		list.add("");
     	}
-    	
+
     	if(dto.getWed() != null)
+    	{
+    		list.add(dto.getWed().replaceAll("\"", ""));
+    	}
+    	else
+    	{
+    		list.add("");
+    	}
+    	if(dto.getThu() != null)
     	{
     		list.add(dto.getThu().replaceAll("\"", ""));
     	}
