@@ -23,7 +23,7 @@ public class SettingService {
     public Setting findSettingByUserId(Long userId) {
         Optional<Setting> settingOptional = settingRepository.findByUserId(userId);
         return settingOptional.orElse(null);
-    } 
+    }
     @Operation(summary = "설정 정보 저장")
     @Transactional
     public Setting createOrUpdate(Setting newSetting, Long userId) {
