@@ -54,7 +54,7 @@ public class DiaryApiController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
     }
-    
+     
     
     @GetMapping("/read")
     @Operation(summary="일기 전체 읽기")
