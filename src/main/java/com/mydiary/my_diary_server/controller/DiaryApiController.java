@@ -42,7 +42,7 @@ public class DiaryApiController {
     	
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
-    } 
+    }
     
     @PostMapping(value = "createTest", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary="내부 api")
