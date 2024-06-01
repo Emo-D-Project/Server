@@ -24,7 +24,6 @@ public class FCMNotificationApiController {
 
     private final FCMNotificationService fcmNotificationService;
 
-    //xp
 
 
     // 알림 보내기
