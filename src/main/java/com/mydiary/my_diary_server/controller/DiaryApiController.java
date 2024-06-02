@@ -43,6 +43,21 @@ public class DiaryApiController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedDiary);
     }
+
+    // 특정 날짜 일기 작성
+    @PostMapping(value = "create/{month}/{day}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(summary="특정 날짜 일기 등록")
+    public ResponseEntity<Diary> addDiary
+            (@RequestPart AddDiaryRequest request, @RequestPart(required=false) List<MultipartFile> imageFile,
+    		@RequestPart(required=false) MultipartFile audioFile,
+            @PathVariable int month,
+    		@PathVariable int day, Principal principal) throws Exception {
+
+        Diary savedDiary = diaryService.save(request, imageFile, audioFile, month, day, principal.getName());
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedDiary);
+    }
     
     @PostMapping(value = "createTest", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @Operation(summary="내부 api")
