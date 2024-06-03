@@ -1,0 +1,203 @@
+package com.mydiary.my_diary_server.test;
+
+import com.mydiary.my_diary_server.config.jwt.JwtProperties;
+import com.mydiary.my_diary_server.config.jwt.TokenProvider;
+import com.mydiary.my_diary_server.domain.OAuthType;
+import com.mydiary.my_diary_server.domain.RefreshToken;
+import com.mydiary.my_diary_server.domain.User;
+import com.mydiary.my_diary_server.dto.KakaoUserInfoDto;
+import com.mydiary.my_diary_server.repository.RefreshTokenRepository;
+import com.mydiary.my_diary_server.service.RefreshTokenService;
+import com.mydiary.my_diary_server.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.security.Principal;
+import java.time.Duration;
+
+
+@RestController
+@RequestMapping("/user")
+
+public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(60);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(60);
+    @Autowired
+    private TokenProvider tokenProvider;
+    @Autowired
+    private RefreshTokenService refreshTokenService;
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private JwtProperties jwtProperties;
+
+
+    private final UserService userService;
+    @Value("${kakao.key}")
+    private String kakaoKey;
+
+    @Autowired
+    public UserController(UserService userService){this.userService = userService;}
+
+    @GetMapping("/diaryPassword")
+    @Operation(summary = "일기장 비밀번호 가져오는 기능")
+    public ResponseEntity<String> getDiaryPassword(Principal principal){
+        return ResponseEntity.ok(userService.getDiaryPassword(Long.parseLong(principal.getName())));
+    }
+
+    // 일기장 비밀번호 변경
+    @PutMapping("/diaryPassword")
+    @Operation(summary = "일기장 비밀번호 변경하는 기능")
+    public ResponseEntity<String> changeDiaryPassword(@RequestBody String password, Principal principal){
+        return ResponseEntity.ok(userService.changeDiaryPassword(Long.parseLong(principal.getName()), password));
+    }
+
+    // 일기장 비밀번호 on/off 설정
+    @PutMapping("/diaryPassword/switch")
+    @Operation(summary = "일기장 비밀번호 on/off 설정 변경하는 기능")
+    public ResponseEntity<String> switchDiaryPassword(Principal principal){
+        return ResponseEntity.ok(userService.switchDiaryPassword(Long.parseLong(principal.getName())));
+    }
+
+    // 일기장 비밀번호 on/off 체크 기능
+    @GetMapping("/diaryPassword/switch")
+    @Operation(summary = "일기장 비밀번호 on/off 설정했는지 확인하는 기능")
+    public ResponseEntity<String> checkDiaryPasswordSwitch(Principal principal){
+        return ResponseEntity.ok(userService.checkDiaryPasswordSwitch(Long.parseLong(principal.getName())));
+    }
+
+    // 유저 firebaseToken 토큰 저장
+    @PutMapping("/firebaseToken")
+    @Operation(summary = "firebaseToken을 저장하는 기능")
+    public ResponseEntity<String> saveFirebaseToken(@RequestBody String firebaseToken, Principal principal){
+        return ResponseEntity.ok(userService.saveFirebaseToken(Long.parseLong(principal.getName()), firebaseToken));
+    }
+
+    @GetMapping()
+    @Operation(summary = "자신의 아이디를 가져오는 기능")
+    public ResponseEntity<Long> getMyUserId(Principal principal){
+        return ResponseEntity.ok(Long.parseLong(principal.getName()));
+    }
+
+    // 카카오 로그인
+    @Operation (summary = "헤더에 kakaoAccessToken 을 넣어서 보내면 서버의 JWT 토큰 발급 ")
+    @GetMapping("/auth/kakao")
+    public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@Parameter(hidden = false) @RequestHeader(required = false)  String kakaoAccessToken) {
+        String token = kakaoAccessToken.replace("Bearer ", "");
+
+        // 토큰 처리 로직을 구현
+        KakaoUserInfoDto userInfo = joinKakaoUser(getKakaoUserInfo(token));
+        return ResponseEntity.ok(userInfo);
+    }
+
+    // 사용자 가입시켜주기
+    KakaoUserInfoDto joinKakaoUser(KakaoUserInfoDto kakaoUserInfo) {
+
+        String accessToken;
+        String refreshToken;
+
+        // 사용자가 이미 가입되어 있는지 확인
+        String name = kakaoUserInfo.getProperties().getNickname();
+        String email = kakaoUserInfo.getKakaoAccount().getEmail();
+        boolean hasEmail = kakaoUserInfo.getKakaoAccount().getHasEmail();
+
+        User kakaoLoginUser = User.builder().password(email + "_" + kakaoUserInfo.getId())
+                .email(email).oauth(OAuthType.KAKAO).username(name).build();
+
+        if (hasEmail) {
+            User originUser = userService.checkUsername(kakaoLoginUser.getUsername());
+            logger.debug("hasEmail == True");
+
+            if (originUser == null) {
+                User savedUser = userService.joinUser(kakaoLoginUser);
+                accessToken = tokenProvider.generateToken(savedUser, ACCESS_TOKEN_DURATION);
+                refreshToken = tokenProvider.generateToken(savedUser, REFRESH_TOKEN_DURATION);
+                saveRefreshToken(savedUser.getId(), refreshToken);
+                kakaoUserInfo.setAccessToken(accessToken);
+                kakaoUserInfo.setRefreshToken(refreshToken);
+
+                try{
+                    logger.debug("saved jwt parser start " );
+
+                    Jwts.parser()
+                            .setSigningKey(jwtProperties.getSecretKey()) // 비밀값으로 복호화
+                            .parseClaimsJws(accessToken);
+                    logger.debug("jwt parser complete");
+
+                } catch (Exception e){ // 복호화 과정에서 에러가 나면 유효하지 않은 토큰
+                    logger.debug("jwt parser fail " );
+                }
+
+            }
+            else{
+                logger.debug(("originUser is not null"));
+                accessToken = tokenProvider.generateToken(originUser, ACCESS_TOKEN_DURATION);
+                refreshToken = tokenProvider.generateToken(originUser, REFRESH_TOKEN_DURATION);
+
+                try{
+                    logger.debug("origin jwt parser start " );
+                    logger.debug("usercontroll token: " + accessToken + "\n");
+
+
+                    Jwts.parser()
+                            .setSigningKey(jwtProperties.getSecretKey()) // 비밀값으로 복호화
+                            .parseClaimsJws(accessToken);
+                    logger.debug("jwt parser complete");
+
+                } catch (Exception e){ // 복호화 과정에서 에러가 나면 유효하지 않은 토큰
+                    logger.debug("jwt parser fail " );
+                }
+
+                saveRefreshToken(originUser.getId(), refreshToken);
+
+                kakaoUserInfo.setAccessToken(accessToken);
+                kakaoUserInfo.setRefreshToken(refreshToken);
+
+
+            }
+
+
+        }
+
+        return kakaoUserInfo;
+    }
+
+    // 사용자 정보 받기
+    KakaoUserInfoDto getKakaoUserInfo(String kakaoToken) {
+
+        HttpHeaders kakaoUserInfoHeader = new HttpHeaders();
+        kakaoUserInfoHeader.add("Authorization", "Bearer " + kakaoToken);
+        kakaoUserInfoHeader.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(kakaoUserInfoHeader);
+        RestTemplate kakaoUserInfoRest = new RestTemplate();
+        ResponseEntity<KakaoUserInfoDto> kakaoUserInfoResponse = kakaoUserInfoRest.exchange(
+                "https://kapi.kakao.com/v2/user/me", HttpMethod.GET, kakaoUserInfoRequest, KakaoUserInfoDto.class);
+        return kakaoUserInfoResponse.getBody();
+    }
+
+    private void saveRefreshToken(Long userId, String newRefreshToken){
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
+                .map(entity -> entity.update(newRefreshToken))
+                .orElse(new RefreshToken(userId, newRefreshToken));
+
+        refreshTokenRepository.save(refreshToken);
+    }
+
+
+
+}
