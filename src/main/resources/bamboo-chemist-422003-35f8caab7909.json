@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "bamboo-chemist-422003",
+  "private_key_id": "35f8caab79097da16914b4943a63d848e4a78909",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCl+JJQgYy0PSoh\ndwlkxlNtATFHh4Ys+vhsI/7QOzH2FNI/r51UA9r9PPP0tiHphLrYwo9VRO6XptEY\nYlJipQfxp9edkvDEnRRCC4KV97JxLVBUAJ06G1NleleMO/Nin+Uchs/CfOTy0PLP\nS5N/p3IWoPw1wL29m4mw0uEws9jfn16FLl2Svdnj+xFLwE1NLgsfnQCL3Zj31U72\nHNfSn0RPwjxA2sDUWELYIQ9TOmoX3vh9mXAyRb+IwnGbVV7fYUTLmkLZgiDuzbX4\nibYUIGInuC7mxL4DhX7Y2TZzzEnyTMIWE9o7U6eBrTxvMyV9DxuOX/Qv1OGnK4dI\nilFX/fkfAgMBAAECggEAAMPKeNCAA3ycqxbPVkWLsN7miTvYpHBroKPx0qfTLR0f\ncueuQ+rYoX4caa5FLbxM2B7dZjkxGEXOhNw/IPE9viFV3wYEUgOfSkafTW2cxuS8\nkAaIsvHZSohrytuj3Xp7JcyBPJYyv+Oymr3wahAteGk5gE3pEeybj9MI8p6Bi1ZA\nxOBceUXaotbOFZWrfj3VxpX5iAOWeWNsUI9VrwrS4MmVCOOH0vL3yE7q45owWdr7\nSLYI7+EXrGLzNf6cCuaZzkM6FiYhtBbPHTxgMcvqpNRezJ6UuB8D/YJ346Ng+572\n6PCVTjtC7aYPzf2y43TdFR4n+YAdvgrCyZsMTds7EQKBgQDQ4K4B1ByPQHQlF9jQ\neHx+jEBJtuIbulyLlwsjWaiboia1fNdiCrwR0fk+qw+8qWlXIfQbk/MFISGLIr5F\nGg4M6iruKwvjE4Yt7f3k9hyheTAXyDyEilADydQwxU/6NKEANmDCzY6ZIGy0DvoP\nxFFPjrKxnKoUDsdCypFjUzfeTQKBgQDLaeahkJPOSiWBEIKMKgf/gOy4iXAONscA\nazvh7YNxD4xrPZmnSBdVPYJZim6IGI/KTqkFAlMbe3HFdVoJO3SG1LEnb4xoDbS1\nxyn39u1W78qGLJ7TKA5kkt6J1GdwzPlLR4vj4JLoT3WNatDsDbhA/qB3bBjLxAtn\nyLUxEQkjGwKBgHhh9YeSQv+Ayy+RpeDIgB/DH04cvAX1C19cJwwxoU5JTvvsPon/\n29J9bKPknQZDsTWJmRHH3BkJtjZlSLm0wYJJ94IahxhRaVTRRDIQcgHSQZiDS/Wr\nbWAxkzyki2qNqHjh3jSHmfbAzEWeGBq8L4yllnFs9EzpE4h4DQDstldFAoGAdcIV\nFitQpfgexhz8tpAOmUfVwu8tw8zKX9+0hxKtKWLK87pxnXoKp/o34AZX/snZVFE9\nX/z8h8hrENjjCr00tGmlNSNKsWJd324xSa/VrqKbKBnkyHFEA81Sr5AbYh4HpCED\nRyTXZ024y+mukTlQFbBSzU/y+uO/hpGW85TdKUkCgYB7R2aqigpjqrhuMSS00Smw\nXf7qFTKBUtvB5G4U2pwRXIxwyCoupkILSHGi2idLGBCh5zJInER2zAIa9W1lOdbG\nJ0QmIbjviiXp9U+rfvQUZxMMTQQDA+aPkAVyYzNsNQ/RpMnWVnkx9adDy+4J7wGm\n3oSZTxG2YEZF3q0Jh4obTg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "emod-172@bamboo-chemist-422003.iam.gserviceaccount.com",
+  "client_id": "113119530569775667496",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/emod-172%40bamboo-chemist-422003.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
